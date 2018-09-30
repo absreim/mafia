@@ -3,4 +3,8 @@
     z-index: 1;
 }
 
-.show {display:block;}
+.show {display: block;}
+
+.menu__button {
+    display: block;
+}

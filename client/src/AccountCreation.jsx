@@ -8,6 +8,7 @@ interface instead
 */
 
 import React, {Component} from "react"
+import "./AccountCreation.css"
 
 class AccountCreation extends Component {
     constructor(props){

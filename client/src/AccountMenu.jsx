@@ -40,25 +40,23 @@ class AccountMenu extends Component{
     }
     render(){
         if(this.props.loginStatus === Shared.LoginStatus.LOGGEDIN && this.props.username){
-            var dropdownClass = "dropdown-content"
+            let dropdownClass = "dropdown-content"
             if(this.state.menuVisible){
                 dropdownClass += " show"
             }
             return (
-                <div>
+                <React.Fragment>
                     <button type="button" onClick={this.toggleMenu}>{this.props.username}</button>
                     <div className={dropdownClass}>
-                        <a onClick={this.handleLogout}>Log Out</a>
-                        <a onClick={this.handleManage}>Manage Account</a>
+                        <button onClick={this.handleLogout} className="menu__button">Log Out</button>
+                        <button onClick={this.handleManage} className="menu__button">Manage Account</button>
                     </div>
-                </div>
+                </React.Fragment>
             )
         }
         else{
             return(
-                <div>
-                    <button type="button" onClick={this.handleLogin}>Log In</button>
-                </div>
+                <button type="button" onClick={this.handleLogin}>Log In</button>
             )
         }
     }

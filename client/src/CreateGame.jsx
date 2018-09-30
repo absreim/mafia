@@ -7,6 +7,7 @@ with numPlayers total players and numWerewolves werewolves
 */
 
 import React, {Component} from "react"
+import "./CreateGame.css"
 
 class CreateGame extends Component{
     constructor(props){

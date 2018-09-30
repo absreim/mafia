@@ -480,7 +480,7 @@ class App extends Component {
       case ContentEnum.ChangePassword:
         return <ChangePassword submitPasswords={this.changePassword} username={this.state.username} />
       case ContentEnum.MainMenu:
-        return <MainMenu handleEnterGame={this.navigateGameContent} handleManage={this.navigateManage} handleLogout={this.logout} />
+        return <MainMenu handleEnterGame={this.navigateGameContent} handleManage={this.navigateManage} handleLogout={this.logout} username={this.state.username} />
       case ContentEnum.Welcome:
         return <Welcome handleLogin={this.navigateLogin} handleCreate={this.navigateCreate} />
       case ContentEnum.GameContent:
