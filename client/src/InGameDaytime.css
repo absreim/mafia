@@ -1,0 +1,9 @@
+.player-list__row {
+    color: black;
+    background-color: white;
+}
+
+.player-list__row--selected {
+    color: white;
+    background-color: black;
+}

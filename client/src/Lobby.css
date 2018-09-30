@@ -1,0 +1,9 @@
+.games-table__row {
+    color: black;
+    background-color: white;
+}
+
+.games-table__row--selected {
+    color: white;
+    background-color: black;
+}
