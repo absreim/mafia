@@ -35,7 +35,7 @@ app.use(session)
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
-app.post("/login", function(req, res){
+app.post("/api/login", function(req, res){
     if(req.session){
         if(req.session.userId){
             res.status(200).send({outcome: Shared.LoginOutcome.LOGGEDIN})
@@ -65,7 +65,7 @@ app.post("/login", function(req, res){
     }
 })
 
-app.get("/logout", function(req, res){
+app.get("/api/logout", function(req, res){
     if(req.session){
         if(req.session.userId){
             req.session.destroy(function(err){
@@ -86,7 +86,7 @@ app.get("/logout", function(req, res){
     }
 })
 
-app.post("/signup", function(req, res){
+app.post("/api/signup", function(req, res){
     if(req.body.username && req.body.password){
         auth.userExists(req.body.username, function(err, result){
             if(err){
@@ -114,7 +114,7 @@ app.post("/signup", function(req, res){
     }
 })
 
-app.post("/deleteAccount", function(req,res){
+app.post("/api/deleteAccount", function(req,res){
     if(req.session){
         if(req.session.userId){
             if(req.body.password){
@@ -159,7 +159,7 @@ app.post("/deleteAccount", function(req,res){
     }
 })
 
-app.post("/changePassword", function(req,res){
+app.post("/api/changePassword", function(req,res){
     if(req.session){
         if(req.session.userId){
             if(req.body.oldPassword && req.body.newPassword){
@@ -199,7 +199,7 @@ app.post("/changePassword", function(req,res){
     }
 })
 
-app.get("/loginstatus", function(req, res){
+app.get("/api/loginstatus", function(req, res){
     if(req.session){
         if(req.session.userId){
             res.send({

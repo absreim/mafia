@@ -15,17 +15,7 @@ import Welcome from "./Welcome"
 import AccountMenu from "./AccountMenu"
 import GameContent from "./GameContent"
 import Shared from "./Shared"
-
-const ContentEnum = {
-  AccountCreation: "AccountCreation",
-  AccountDelete: "AccountDelete",
-  AccountLogin: "AccountLogin",
-  AccountManage: "AccountManage",
-  ChangePassword: "ChangePassword",
-  GameContent: "GameContent",
-  MainMenu: "MainMenu",
-  Welcome: "Welcome"
-}
+import {Switch, Route, Redirect} from "react-router-dom"
 
 class App extends Component {
   constructor(props){
@@ -33,7 +23,6 @@ class App extends Component {
     this.state = {
       username: null,
       loginStatus: null,
-      currentContent: null,
       userMessage: "" // important message visible to user
     }
     axios.defaults.withCredentials = true
@@ -64,7 +53,7 @@ class App extends Component {
   updateLoginStatus(){
     axios({
       method: "get",
-      url: "/loginstatus"
+      url: "/api/loginstatus"
     }).then((function(response){
       if(response.data.loginStatus){
         switch(response.data.loginStatus){
@@ -72,8 +61,7 @@ class App extends Component {
             if(response.data.username){
               this.setState({
                 username: response.data.username,
-                loginStatus: Shared.LoginStatus.LOGGEDIN,
-                currentContent: ContentEnum.MainMenu
+                loginStatus: Shared.LoginStatus.LOGGEDIN
               })
             }
             else{
@@ -83,8 +71,7 @@ class App extends Component {
           case Shared.LoginStatus.LOGGEDOUT:
             this.setState({
               username: null,
-              loginStatus: Shared.LoginStatus.LOGGEDOUT,
-              currentContent: ContentEnum.Welcome
+              loginStatus: Shared.LoginStatus.LOGGEDOUT
             })
             break
           case Shared.LoginStatus.ERROR:
@@ -109,7 +96,7 @@ class App extends Component {
   createAccount(username, password){
     axios({
       method: "post",
-      url: "/signup",
+      url: "/api/signup",
       data: {
         username: username,
         password: password
@@ -125,7 +112,7 @@ class App extends Component {
             break
           case Shared.AccountCreateOutcome.MISSINGINFO:
             this.displayMessage("Error creating account due to API mismatch between client and server. Please report this error and try again later.")
-            console.log("Error: server reports that in the request to create an account, username and password information is missing from the body.")
+            console.log("Error: server reports that in the request to create an account, username and/or password information is missing from the body.")
             break
           case Shared.AccountCreateOutcome.SUCCESS:
             if(this.state.loginStatus === Shared.LoginStatus.LOGGEDIN){
@@ -133,7 +120,6 @@ class App extends Component {
             }
             else if(this.state.loginStatus === Shared.LoginStatus.LOGGEDOUT){
               this.setState({
-                currentContent: ContentEnum.AccountLogin,
                 userMessage: "Account successfully created!"
               })
             }
@@ -169,7 +155,7 @@ class App extends Component {
     if(this.state.loginStatus === Shared.LoginStatus.LOGGEDIN && this.state.username){
       axios({
         method: "post",
-        url: "/deleteAccount",
+        url: "/api/deleteAccount",
         data: {
           password: password
         }
@@ -192,7 +178,6 @@ class App extends Component {
               this.setState({
                 username: null,
                 loginStatus: Shared.LoginStatus.LOGGEDOUT,
-                currentContent: ContentEnum.Welcome,
                 userMessage: ""
               })
               break
@@ -216,7 +201,7 @@ class App extends Component {
     this.clearMessage()
     axios({
       method: "post",
-      url: "/login",
+      url: "/api/login",
       data: {
         username: username,
         password: password
@@ -239,8 +224,7 @@ class App extends Component {
           case Shared.LoginOutcome.SUCCESS:
             this.setState({
               username: username,
-              loginStatus: Shared.LoginStatus.LOGGEDIN,
-              currentContent: ContentEnum.MainMenu
+              loginStatus: Shared.LoginStatus.LOGGEDIN
             })
             break
           default:
@@ -259,7 +243,7 @@ class App extends Component {
     if(this.state.loginStatus === Shared.LoginStatus.LOGGEDIN || this.state.loginStatus === this.LoginStatus.ERROR){
       axios({
         method: "get",
-        url: "/logout"
+        url: "/api/logout"
       }).then((function(response){
         if(response.data){
           switch(response.data.outcome){
@@ -267,7 +251,6 @@ class App extends Component {
               this.setState({
                 username: null,
                 loginStatus: Shared.LoginStatus.LOGGEDOUT,
-                currentContent: ContentEnum.Welcome,
                 userMessage: "Successfully logged out."
               })
               break
@@ -278,7 +261,6 @@ class App extends Component {
               this.setState({
                 username: null,
                 loginStatus: Shared.LoginStatus.LOGGEDOUT,
-                currentContent: ContentEnum.Welcome,
                 userMessage: "Server indicates that you were already logged out."
               })
               console.log("Warning: client made attempt to log out, but server reports account is already logged out.")
@@ -309,7 +291,7 @@ class App extends Component {
     if(this.state.loginStatus === Shared.LoginStatus.LOGGEDIN && this.state.username){
       axios({
         method: "post",
-        url: "/changePassword",
+        url: "/api/changePassword",
         data: {
           oldPassword: oldPassword,
           newPassword: newPassword
@@ -349,146 +331,99 @@ class App extends Component {
     }
   }
 
-  // navigation
+  // navigation functions passed to children
 
   navigateLogin(){
     this.clearMessage()
-    if(this.state.loginStatus === Shared.LoginStatus.LOGGEDIN){
-      this.displayMessage("Already logged in. To log in as a different user, log out first.")
-      console.log("Warning: attempt to navigate to log in component when a user is already logged in.")
-    }
-    else if(this.state.loginStatus === Shared.LoginStatus.LOGGEDOUT){
-      this.setState({currentContent: ContentEnum.AccountLogin})
-    }
-    else if(this.state.loginStatus === Shared.LoginStatus.ERROR){
-      this.displayMessage("User session is corrupt. Logging out and back in may fix the problem.")
-      console.log("Tried to navigate to login page but user session is corrupt. Logging out first may fix the problem.")
-    }
-    else{
-      this.displayMessage("User session was not properly initialized. Reloading the page may fix the problem.")
-      console.log("Tried to navigate to login page but login status not properly initialized. One case may be that the backend server was unreachable. Reloading the page may fix the problem.")
-    }
+    window.location.assign("/login")
   }
   navigateManage(){
     this.clearMessage()
-    if(this.state.loginStatus === Shared.LoginStatus.LOGGEDIN){
-      this.setState({currentContent: ContentEnum.AccountManage})
-    }
-    else if(this.state.loginStatus === Shared.LoginStatus.LOGGEDOUT){
-      this.displayMessage("You are not logged in. Please log in first to manage an account.")
-    }
-    else if(this.state.loginStatus === Shared.LoginStatus.ERROR){
-      this.displayMessage("User session is corrupt. Logging out and back in may fix the problem.")
-      console.log("Tried to navigate to account management page but user session is corrupt. Logging out first may fix the problem.")
-    }
-    else{
-      this.displayMessage("User session was not properly initialized. Reloading the page may fix the problem.")
-      console.log("Tried to navigate to account management but login status not properly initialized. One cause may be that the backend server was unreachable. Reloading the page may fix the problem.")
-    }
+    window.location.assign("/account-manage")
   }
   navigateCreate(){
     this.clearMessage()
-    if(this.state.loginStatus === Shared.LoginStatus.LOGGEDIN){
-      this.displayMessage("You are logged in. Please log out first.")
-    }
-    else if(this.state.loginStatus === Shared.LoginStatus.ERROR){
-      this.displayMessage("User session is corrupt. Please log out first and try again.")
-    }
-    else if(this.state.loginStatus === Shared.LoginStatus.LOGGEDOUT){
-      this.setState({currentContent: ContentEnum.AccountCreation})
-    }
-    else{
-      this.displayMessage("User session was not properly initilized. Please refresh the page and try again.")
-    }
+    window.location.assign("/account-create")
   }
   navigateChangePassword(){
     this.clearMessage()
-    if(this.state.loginStatus === Shared.LoginStatus.LOGGEDIN){
-      this.setState({currentContent: ContentEnum.ChangePassword})
-    }
-    else if(this.state.loginStatus === Shared.LoginStatus.LOGGEDOUT){
-      this.displayMessage("You must be logged in to change the password for an account.")
-    }
-    else if(this.state.loginStatus === Shared.LoginStatus.ERROR){
-      this.displayMessage("User session is corrupt. Please log out and log in again.")
-    }
-    else{
-      this.displayMessage("User session was not properly initialized. Please refresh the page and try again.")
-    }
+    window.location.assign("/change-password")
   }
   navigateDelete(){
     this.clearMessage()
-    if(this.state.loginStatus === Shared.LoginStatus.LOGGEDIN){
-      this.setState({currentContent: ContentEnum.AccountDelete})
-    }
-    else if(this.state.loginStatus === Shared.LoginStatus.LOGGEDOUT){
-      this.displayMessage("You must be logged in to delete an account.")
-    }
-    else if(this.state.loginStatus === Shared.LoginStatus.ERROR){
-      this.displayMessage("User session is corrupt. Please log out and log in again.")
-    }
-    else{
-      this.displayMessage("User session was not properly initialized. Please refresh the page and try again.")
-    }
+    window.location.assign("/account-delete")
   }
   navigateMainMenu(){
     this.clearMessage()
-    if(this.state.loginStatus === Shared.LoginStatus.LOGGEDIN){
-      this.setState({currentContent: ContentEnum.MainMenu})
-    }
-    else if(this.state.loginStatus === Shared.LoginStatus.LOGGEDOUT){
-      this.displayMessage("You are not logged in. Please log in first.")
-    }
-    else if(this.state.loginStatus === Shared.LoginStatus.ERROR){
-      this.displayMessage("User session is corrupt. Logging out and back in may fix the problem.")
-      console.log("Tried to navigate to main menu but user session is corrupt. Logging out first may fix the problem.")
-    }
-    else{
-      this.displayMessage("User session was not properly initialized. Reloading the page may fix the problem.")
-      console.log("Tried to navigate to main menu but login status not properly initialized. One cause may be that the backend server was unreachable. Reloading the page may fix the problem.")
-    }
+    window.location.assign("/main-menu")
   }
   navigateGameContent(){
     this.clearMessage()
-    if(this.state.loginStatus === Shared.LoginStatus.LOGGEDIN){
-      this.setState({currentContent: ContentEnum.GameContent})
+    window.location.assign("/game")
+  }
+
+  getMainContent(){
+    if(this.state.loginStatus === null){
+      return (
+        <React.Fragment>
+          <h2>Loading data from server...</h2>
+        </React.Fragment>
+      )
+    }
+    else if(this.state.loginStatus === Shared.LoginStatus.LOGGEDIN){
+      return(
+        <Switch>
+          <Route path="/game" render={() =>
+            <GameContent handleMainMenu={this.navigateMainMenu} username={this.state.username} />
+          } />
+          <Route path="/main-menu" render={() => 
+            <MainMenu handleEnterGame={this.navigateGameContent} handleManage={this.navigateManage} 
+              handleLogout={this.logout} username={this.state.username} />
+          } />
+          <Route path="/account-create" render={() => 
+            <AccountCreation submitCredentials={this.createAccountWithConfirm} 
+              loginRedirect={this.navigateLogin} />
+            } />
+          <Route path="/account-delete" render={() =>
+            <AccountDelete submitPassword={this.deleteAccount} username={this.state.username} />
+          } />
+          <Route path="/account-manage" render={() =>
+            <AccountManage changePasswordRedirect={this.navigateChangePassword} 
+              deleteRedirect={this.navigateDelete} username={this.state.username} />
+          } />
+          <Route path="/change-password" render={() => 
+            <ChangePassword submitPasswords={this.changePassword} username={this.state.username} />
+          } />
+          <Redirect to="/main-menu" />
+        </Switch>
+      )
     }
     else if(this.state.loginStatus === Shared.LoginStatus.LOGGEDOUT){
-      this.displayMessage("You are not logged in. Please log in first.")
-    }
-    else if(this.state.loginStatus === Shared.LoginStatus.ERROR){
-      this.displayMessage("User session is corrupt. Logging out and back in may fix the problem.")
-      console.log("Tried to navigate to game content but user session is corrupt. Logging out first may fix the problem.")
+      return(
+        <Switch>
+          <Route exact path="/" render={() =>
+            <Welcome handleLogin={this.navigateLogin} handleCreate={this.navigateCreate} />
+          } />
+          <Route path="/login" render={() => 
+            <AccountLogin submitCredentials={this.login} createRedirect={this.navigateCreate} />
+          } />
+          <Route path="/account-create" render={() => 
+            <AccountCreation submitCredentials={this.createAccountWithConfirm} 
+              loginRedirect={this.navigateLogin} />
+          } />
+          <Redirect to="/" />
+        </Switch>
+      )
     }
     else{
-      this.displayMessage("User session was not properly initialized. Reloading the page may fix the problem.")
-      console.log("Tried to navigate to game content but login status not properly initialized. One cause may be that the backend server was unreachable. Reloading the page may fix the problem.")
+      return(
+        <React.Fragment>
+          <h2>Error communicating with server. Please try again later.</h2>
+        </React.Fragment>
+      )
     }
   }
 
-  // return component of content pane based on state
-  getContent(){
-    switch(this.state.currentContent){
-      case ContentEnum.AccountCreation:
-        return <AccountCreation submitCredentials={this.createAccountWithConfirm} loginRedirect={this.navigateLogin} />
-      case ContentEnum.AccountDelete:
-        return <AccountDelete submitPassword={this.deleteAccount} username={this.state.username} />
-      case ContentEnum.AccountLogin:
-        return <AccountLogin submitCredentials={this.login} createRedirect={this.navigateCreate} />
-      case ContentEnum.AccountManage:
-        return <AccountManage changePasswordRedirect={this.navigateChangePassword} deleteRedirect={this.navigateDelete} username={this.state.username} />
-      case ContentEnum.ChangePassword:
-        return <ChangePassword submitPasswords={this.changePassword} username={this.state.username} />
-      case ContentEnum.MainMenu:
-        return <MainMenu handleEnterGame={this.navigateGameContent} handleManage={this.navigateManage} handleLogout={this.logout} username={this.state.username} />
-      case ContentEnum.Welcome:
-        return <Welcome handleLogin={this.navigateLogin} handleCreate={this.navigateCreate} />
-      case ContentEnum.GameContent:
-        return <GameContent handleMainMenu={this.navigateMainMenu} username={this.state.username} />
-      default:
-        return <h2>An internal error has occurred. Please report this issue and try again later.</h2>
-    }
-  }
   render() {
     return (
       <React.Fragment>
@@ -500,7 +435,7 @@ class App extends Component {
             handleLogin={this.navigateLogin} handleLogout={this.logout} 
             handleManage={this.navigateManage} />
         </nav>
-        <main>{this.getContent()}</main>
+        <main>{this.getMainContent()}</main>
         <footer>{this.state.userMessage}</footer>
       </React.Fragment>
     )
