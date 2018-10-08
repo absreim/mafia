@@ -79,7 +79,6 @@ class InGameNighttimeSummary extends Component{
             tablesArea = (
                 <React.Fragment>
                     <table>
-                        <caption>List of votes cast by living werewolves.</caption>
                         <thead>
                             <tr>
                                 <th colSpan="2">Votes Cast by Living Werewolves</th>
@@ -92,7 +91,6 @@ class InGameNighttimeSummary extends Component{
                         </thead>
                     </table>
                     <table>
-                        <caption>List of living villagers.</caption>
                         <thead>
                             <tr>
                                 <th>Living Villagers</th>
@@ -101,7 +99,6 @@ class InGameNighttimeSummary extends Component{
                         <tbody>{livingVillagersRows}</tbody>
                     </table>
                     <table>
-                        <caption>List of dead villagers.</caption>
                         <thead>
                             <tr>
                                 <th>Dead Villagers</th>
@@ -110,7 +107,6 @@ class InGameNighttimeSummary extends Component{
                         <tbody>{deadVillagersRows}</tbody>
                     </table>
                     <table>
-                        <caption>List of dead werewolves.</caption>
                         <thead>
                             <tr>
                                 <th>Dead Werewolves</th>
@@ -131,7 +127,6 @@ class InGameNighttimeSummary extends Component{
             tablesArea = (
                 <React.Fragment>
                     <table>
-                        <caption>List of living players.</caption>
                         <thead>
                             <tr>
                                 <th>Living Players</th>
@@ -140,7 +135,6 @@ class InGameNighttimeSummary extends Component{
                         <tbody>{livingVillagersRows}</tbody>
                     </table>
                     <table>
-                        <caption>List of dead players.</caption>
                         <thead>
                             <tr>
                                 <th>Dead Players</th>

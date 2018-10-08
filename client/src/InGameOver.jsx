@@ -67,7 +67,6 @@ class InGameOver extends Component {
             livingVictorsTable = (
                 <React.Fragment>
                     <table>
-                        <caption>List of living werewolves.</caption>
                         <thead>
                             <tr>
                                 <th colSpan="2">Living Werewolves</th>
@@ -80,7 +79,6 @@ class InGameOver extends Component {
                         <tbody>{livingWerewolvesRows}</tbody>
                     </table>
                     <table>
-                        <caption>List of living villagers.</caption>
                         <thead>
                             <tr>
                                 <th colSpan="2">Living Villagers</th>
@@ -101,7 +99,6 @@ class InGameOver extends Component {
             )
             livingVictorsTable = (
                 <table>
-                    <caption>List of living villagers.</caption>
                     <thead>
                         <tr>
                             <th colSpan="2">Living Villagers</th>
@@ -122,7 +119,6 @@ class InGameOver extends Component {
                 <p>Acknowledge the results to exit the game and return to the lobby.</p>
                 {livingVictorsTable}
                 <table>
-                    <caption>List of dead villagers.</caption>
                     <thead>
                         <tr>
                             <th colSpan="2">Dead Villagers</th>
@@ -135,7 +131,6 @@ class InGameOver extends Component {
                     <tbody>{deadVillagersRows}</tbody>
                 </table>
                 <table>
-                    <caption>List of dead werewolves.</caption>
                     <thead>
                         <tr>
                             <th colSpan="2">Dead Werewolves</th>

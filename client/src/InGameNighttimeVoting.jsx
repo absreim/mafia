@@ -90,7 +90,6 @@ class InGameNighttimeVoting extends Component{
                         <span className=".chosen-player-desc__player-name">{this.props.chosenPlayer}</span>.</p>
                     <p>A simple majority is need to kill the chosen villager.</p>
                     <table>
-                        <caption>List of living werewolves.</caption>
                         <thead>
                             <tr>
                                 <th colSpan="2">Living Werewolves</th>
@@ -103,7 +102,6 @@ class InGameNighttimeVoting extends Component{
                         <tbody>{livingWerewolvesRows}</tbody>
                     </table>
                     <table>
-                        <caption>List of living villagers.</caption>
                         <thead>
                             <tr>
                                 <th>Living Villagers</th>
@@ -112,7 +110,6 @@ class InGameNighttimeVoting extends Component{
                         <tbody>{livingVillagersRows}</tbody>
                     </table>
                     <table>
-                        <caption>List of dead villagers.</caption>
                         <thead>
                             <tr>
                                 <th>Dead Villagers</th>
@@ -121,7 +118,6 @@ class InGameNighttimeVoting extends Component{
                         <tbody>{deadVillagersRows}</tbody>
                     </table>
                     <table>
-                        <caption>List of dead werewolves.</caption>
                         <thead>
                             <tr>
                                 <th>Dead Werewolves</th>
@@ -146,7 +142,6 @@ class InGameNighttimeVoting extends Component{
                     <h2>Werewolves are currently voting on whether to kill a selected villager.</h2>
                     <p>{statusDescText}</p>
                     <table>
-                        <caption>List of living players.</caption>
                         <thead>
                             <tr>
                                 <th>Living Players</th>
@@ -155,7 +150,6 @@ class InGameNighttimeVoting extends Component{
                         <tbody>{livingVillagersRows}</tbody>
                     </table>
                     <table>
-                        <caption>List of dead players.</caption>
                         <thead>
                             <tr>
                                 <th>Dead Players</th>

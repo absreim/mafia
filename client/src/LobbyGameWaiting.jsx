@@ -34,7 +34,6 @@ class LobbyGameWaiting extends Component {
                 <p>Number of werewolves: {this.props.gameState.numWerewolves}</p>
                 <p>Number of players currently joined {this.props.gameState.players.length}</p>
                 <table>
-                    <caption>List of players in the joined game.</caption>
                     <thead>
                         <tr>
                             <th>Players in Game</th>

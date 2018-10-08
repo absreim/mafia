@@ -1,10 +1,33 @@
-.dropdown-content {
-    display: none;
+.dropdown {
     z-index: 1;
+    position: absolute;
+    background-color: white;
+    cursor: pointer;
+    border: 2px solid;
 }
 
-.show {display: block;}
+.dropdown__collapsed {
+    display: none;
+}
 
-.menu__button {
+.dropdown__expanded {
     display: block;
+}
+
+.dropdown__link {
+    display: block;
+    border: 1px solid;
+    padding: 3px;
+}
+
+.icon-username-box {
+    cursor: pointer;
+    border: 2px solid;
+    padding: 5px;
+}
+
+img {
+    width: 32px;
+    height: 32px;
+    vertical-align: middle;
 }

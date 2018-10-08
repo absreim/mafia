@@ -96,7 +96,6 @@ class InGameDaytimeVoting extends Component{
                     <p>You are a werewolf and you are {deathStatusString}.</p>
                     <p>A simple majority is needed to execute the accused. Cast your vote below.</p>
                     <table>
-                        <caption>List of living villagers.</caption>
                         <thead>
                             <tr>
                                 <th colSpan="2">Living Villagers</th>
@@ -109,7 +108,6 @@ class InGameDaytimeVoting extends Component{
                         <tbody>{livingVillagersRows}</tbody>
                     </table>
                     <table>
-                        <caption>List of living werewolves.</caption>
                         <thead>
                             <tr>
                                 <th colSpan="2">Living Werewolves</th>
@@ -122,7 +120,6 @@ class InGameDaytimeVoting extends Component{
                         <tbody>{livingWerewolvesRows}</tbody>
                     </table>
                     <table>
-                        <caption>List of dead villagers.</caption>
                         <thead>
                             <tr>
                                 <th>Dead Villagers</th>
@@ -131,7 +128,6 @@ class InGameDaytimeVoting extends Component{
                         <tbody>{deadVillagersRows}</tbody>
                     </table>
                     <table>
-                        <caption>List of dead werewolves.</caption>
                         <thead>
                             <tr>
                                 <th>Dead Werewolves</th>
@@ -155,7 +151,6 @@ class InGameDaytimeVoting extends Component{
                     <p>You are a villager and you are {deathStatusString}.</p>
                     <p>A simple majority is needed to execute the accused. Cast your vote below.</p>
                     <table>
-                        <caption>List of living players.</caption>
                         <thead>
                             <tr>
                                 <th colSpan="2">Living Players</th>
@@ -168,7 +163,6 @@ class InGameDaytimeVoting extends Component{
                         <tbody>{livingVillagersRows}</tbody>
                     </table>
                     <table>
-                        <caption>List of dead players.</caption>
                         <thead>
                             <tr>
                                 <th>Dead Players</th>

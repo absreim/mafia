@@ -93,7 +93,6 @@ class InGameNighttime extends Component{
                     <p>In this phase, werewolves choose a villager to kill and vote on the killing.</p>
                     <p>{statusDescText}</p>
                     <table>
-                        <caption>List of living villagers.</caption>
                         <thead>
                             <tr>
                                 <th>Living Villagers</th>
@@ -102,7 +101,6 @@ class InGameNighttime extends Component{
                         <tbody>{livingVillagersRows}</tbody>
                     </table>
                     <table>
-                        <caption>List of living werewolves.</caption>
                         <thead>
                             <tr>
                                 <th>Living Werewolves</th>
@@ -111,7 +109,6 @@ class InGameNighttime extends Component{
                         <tbody>{livingWerewolvesRows}</tbody>
                     </table>
                     <table>
-                        <caption>List of dead villagers.</caption>
                         <thead>
                             <tr>
                                 <th>Dead Villagers</th>
@@ -120,7 +117,6 @@ class InGameNighttime extends Component{
                         <tbody>{deadVillagersRows}</tbody>
                     </table>
                     <table>
-                        <caption>List of dead werewolves.</caption>
                         <thead>
                             <tr>
                                 <th>Dead Werewolves</th>
@@ -164,7 +160,6 @@ class InGameNighttime extends Component{
                     <p>In this phase, werewolves choose a villager to kill.</p>
                     <p>{statusDescText}</p>
                     <table>
-                        <caption>List of living players.</caption>
                         <thead>
                             <tr>
                                 <th>Living Players</th>
@@ -173,7 +168,6 @@ class InGameNighttime extends Component{
                         <tbody>{livingPlayersRows}</tbody>
                     </table>
                     <table>
-                        <caption>List of dead players.</caption>
                         <thead>
                             <tr>
                                 <th>Dead Players</th>

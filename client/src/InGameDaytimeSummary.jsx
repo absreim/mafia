@@ -64,7 +64,6 @@ class InGameDaytimeSummary extends Component{
             })
             votesTable = (
                 <table>
-                    <caption>List of living players with their votes and faction.</caption>
                     <thead>
                         <tr>
                             <th colSpan="3">Votes Cast by Each Player and their Faction</th>
@@ -89,7 +88,6 @@ class InGameDaytimeSummary extends Component{
             })
             deadTable = (
                 <table>
-                    <caption>List of dead players by faction.</caption>
                     <thead>
                         <tr>
                             <th colSpan="2">Dead Players and their Faction</th>
@@ -121,7 +119,6 @@ class InGameDaytimeSummary extends Component{
             })
             votesTable = (
                 <table>
-                    <caption>List of living players and their votes.</caption>
                     <thead>
                         <tr>
                             <th colSpan="2">Votes Cast by Each Player</th>
@@ -143,7 +140,6 @@ class InGameDaytimeSummary extends Component{
             })
             deadTable = (
                 <table>
-                    <caption>List of dead players by faction.</caption>
                     <thead>
                         <tr>
                             <th>Dead Players</th>

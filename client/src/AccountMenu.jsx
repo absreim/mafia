@@ -8,12 +8,14 @@ not logged in
 - handleLogin - handler function for when user clicks the Log In link
 - handleLogout - handler function for when the user clicks the Log Out link
 - handleManage - handler function for when the user clicks the Manage
-Account link
+- handleCreate - handler function for when the user clicks the Create Account link
 */
 
 import React, {Component} from "react"
 import "./AccountMenu.css"
 import Shared from "./Shared.js"
+import filledPersonSvg from "./person_filled.svg"
+import hollowPersonSvg from "./person_hollow.svg"
 
 class AccountMenu extends Component{
     constructor(props){
@@ -22,16 +24,24 @@ class AccountMenu extends Component{
         this.handleLogin = this.handleLogin.bind(this)
         this.handleLogout = this.handleLogout.bind(this)
         this.handleManage = this.handleManage.bind(this)
+        this.handleCreate = this.handleCreate.bind(this)
         this.toggleMenu = this.toggleMenu.bind(this)
     }
     handleLogin(){
+        this.setState({menuVisible: false})
         this.props.handleLogin()
     }
     handleLogout(){
+        this.setState({menuVisible: false})
         this.props.handleLogout()
     }
     handleManage(){
+        this.setState({menuVisible: false})
         this.props.handleManage()
+    }
+    handleCreate(){
+        this.setState({menuVisible: false})
+        this.props.handleCreate()
     }
     toggleMenu(){
         this.setState((prevState) => ({
@@ -39,24 +49,36 @@ class AccountMenu extends Component{
         }))
     }
     render(){
+        let dropdownClass = "dropdown"
+        dropdownClass += this.state.menuVisible ? " dropdown__expanded" : 
+            " dropdown__collapsed"
         if(this.props.loginStatus === Shared.LoginStatus.LOGGEDIN && this.props.username){
-            let dropdownClass = "dropdown-content"
-            if(this.state.menuVisible){
-                dropdownClass += " show"
-            }
             return (
                 <React.Fragment>
-                    <button type="button" onClick={this.toggleMenu}>{this.props.username}</button>
+                    <div onClick={this.toggleMenu} className="icon-username-box">
+                        <img src={filledPersonSvg} alt="Filled wireframe person icon." />
+                        <a>{this.props.username}</a>
+                    </div>
                     <div className={dropdownClass}>
-                        <button onClick={this.handleLogout} className="menu__button">Log Out</button>
-                        <button onClick={this.handleManage} className="menu__button">Manage Account</button>
+                        <a onClick={this.handleLogout} className="dropdown__link">Log Out</a>
+                        <a onClick={this.handleManage} className="dropdown__link">Manage Account</a>
+                        <a onClick={this.handleCreate} className="dropdown__link">Create Account</a>
                     </div>
                 </React.Fragment>
             )
         }
         else{
             return(
-                <button type="button" onClick={this.handleLogin}>Log In</button>
+                <React.Fragment>
+                    <div onClick={this.toggleMenu} className="icon-username-box">
+                        <img src={hollowPersonSvg} alt="Hollow wireframe person icon." />
+                        <a>Not Logged In</a>
+                    </div>
+                    <div className={dropdownClass}>
+                        <a onClick={this.handleLogin} className="dropdown__link">Log In</a>
+                        <a onClick={this.handleCreate} className="dropdown__link">Create Account</a>
+                    </div>
+                </React.Fragment>
             )
         }
     }

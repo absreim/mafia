@@ -68,7 +68,6 @@ class InGameDaytime extends Component{
                         <p>You are a werewolf and you are alive.</p>
                         <p>In this phase, someone must suggest a living player to execute. First come first serve.</p>
                         <table>
-                            <caption>List of living villagers.</caption>
                             <thead>
                                 <tr>
                                     <th>Living Villagers</th>
@@ -77,7 +76,6 @@ class InGameDaytime extends Component{
                             <tbody>{livingVillagersRows}</tbody>
                         </table>
                         <table>
-                            <caption>List of living werewolves.</caption>
                             <thead>
                                 <tr>
                                     <th>Living Werewolves</th>
@@ -86,7 +84,6 @@ class InGameDaytime extends Component{
                             <tbody>{livingWerewolvesRows}</tbody>
                         </table>
                         <table>
-                            <caption>List of dead villagers.</caption>
                             <thead>
                                 <tr>
                                     <th>Dead Villagers</th>
@@ -95,7 +92,6 @@ class InGameDaytime extends Component{
                             <tbody>{deadVillagersRows}</tbody>
                         </table>
                         <table>
-                            <caption>List of dead werewolves.</caption>
                             <thead>
                                 <tr>
                                     <th>Dead Werewolves</th>
@@ -133,7 +129,6 @@ class InGameDaytime extends Component{
                         <p>You are a werewolf and you are dead.</p>
                         <p>In this phase, someone must suggest a living player to execute. First come first serve.</p>
                         <table>
-                            <caption>List of living villagers.</caption>
                             <thead>
                                 <tr>
                                     <th>Living Villagers</th>
@@ -142,7 +137,6 @@ class InGameDaytime extends Component{
                             <tbody>{livingVillagersRows}</tbody>
                         </table>
                         <table>
-                            <caption>List of living werewolves.</caption>
                             <thead>
                                 <tr>
                                     <th>Living Werewolves</th>
@@ -151,7 +145,6 @@ class InGameDaytime extends Component{
                             <tbody>{livingWerewolvesRows}</tbody>
                         </table>
                         <table>
-                            <caption>List of dead villagers.</caption>
                             <thead>
                                 <tr>
                                     <th>Dead Villagers</th>
@@ -160,7 +153,6 @@ class InGameDaytime extends Component{
                             <tbody>{deadVillagersRows}</tbody>
                         </table>
                         <table>
-                            <caption>List of dead werewolves.</caption>
                             <thead>
                                 <tr>
                                     <th>Dead Werewolves</th>
@@ -204,7 +196,6 @@ class InGameDaytime extends Component{
                         <p>You are a villager and you are alive.</p>
                         <p>In this phase, someone must suggest a living player to execute. First come first serve.</p>
                         <table>
-                            <caption>List of living players.</caption>
                             <thead>
                                 <tr>
                                     <th>Living Players</th>
@@ -213,7 +204,6 @@ class InGameDaytime extends Component{
                             <tbody>{livingPlayersRows}</tbody>
                         </table>
                         <table>
-                            <caption>List of dead players.</caption>
                             <thead>
                                 <tr>
                                     <th>Dead Players</th>
@@ -244,7 +234,6 @@ class InGameDaytime extends Component{
                         <p>You are a villager and you are dead.</p>
                         <p>In this phase, someone must suggest a living player to execute. First come first serve.</p>
                         <table>
-                            <caption>List of living players.</caption>
                             <thead>
                                 <tr>
                                     <th>Living Players</th>
@@ -253,7 +242,6 @@ class InGameDaytime extends Component{
                             <tbody>{livingPlayersRows}</tbody>
                         </table>
                         <table>
-                            <caption>List of dead players.</caption>
                             <thead>
                                 <tr>
                                     <th>Dead Players</th>

@@ -44,7 +44,6 @@ class InGameStarted extends Component{
                     <p>Take note of the lists of werewolves and villagers and 
                         click the "Ready" button to continue.</p>
                     <table>
-                        <caption>List of werewolves.</caption>
                         <thead>
                             <tr>
                                 <th colSpan="2">Werewolves</th>
@@ -57,7 +56,6 @@ class InGameStarted extends Component{
                         <tbody>{werewolfRows}</tbody>
                     </table>
                     <table>
-                        <caption>List of villagers.</caption>
                         <thead>
                             <tr>
                                 <th colSpan="2">Villagers</th>
@@ -81,7 +79,6 @@ class InGameStarted extends Component{
                     <p>You are a villager.</p>
                     <p>Take note of the list of players and click the "Ready" button to continue.</p>
                     <table>
-                        <caption>List of players.</caption>
                         <thead>
                             <tr>
                                 <th colSpan="2">Players</th>

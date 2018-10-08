@@ -67,7 +67,6 @@ class Lobby extends Component{
             <div>
                 <h2>Games Lobby</h2>
                 <table>
-                    <caption>List of games in lobby along with attributes.</caption>
                     <thead>
                         <tr>
                             <th colSpan="4">Games in Lobby</th>
@@ -82,7 +81,6 @@ class Lobby extends Component{
                     <tbody>{lobbyGameRows}</tbody>
                 </table>
                 <table>
-                    <caption>List of players in selected game.</caption>
                     <thead>
                         <tr>
                             <th>Players in Selected Game</th>

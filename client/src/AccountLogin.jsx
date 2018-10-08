@@ -42,7 +42,7 @@ class AccountLogin extends Component{
                 <label htmlFor="password">Password:</label>
                 <input type="password" id="password" value={this.state.password} onChange={this.handlePasswordChange} />
                 <input type="submit" value="Submit" />
-                <h3>Don't have an account? <a onClick={this.handleCreateLink}>Create one.</a></h3>
+                <p>Don't have an account? <a onClick={this.handleCreateLink}>Create one.</a></p>
             </form>
         )
     }

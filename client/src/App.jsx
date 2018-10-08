@@ -15,7 +15,7 @@ import Welcome from "./Welcome"
 import AccountMenu from "./AccountMenu"
 import GameContent from "./GameContent"
 import Shared from "./Shared"
-import {Switch, Route, Redirect} from "react-router-dom"
+import {Switch, Route, Redirect, Link, withRouter} from "react-router-dom"
 
 class App extends Component {
   constructor(props){
@@ -116,12 +116,15 @@ class App extends Component {
             break
           case Shared.AccountCreateOutcome.SUCCESS:
             if(this.state.loginStatus === Shared.LoginStatus.LOGGEDIN){
-              this.displayMessage("Account successfully created! To log in with your new account, log out first.")
+              this.displayMessage("Account successfully created! To log in with your new account," + 
+                "you must log out first.")
+              this.props.history.push("/main-menu")
             }
             else if(this.state.loginStatus === Shared.LoginStatus.LOGGEDOUT){
               this.setState({
                 userMessage: "Account successfully created!"
               })
+              this.props.history.push("/")
             }
             else{
               this.displayMessage("Account successfully created, but your user session appears to be corrupt. Please log out or refresh the page before attempting to log in with your new account.")
@@ -180,6 +183,7 @@ class App extends Component {
                 loginStatus: Shared.LoginStatus.LOGGEDOUT,
                 userMessage: ""
               })
+              this.props.history.push("/")
               break
             default:
               this.displayMessage("Incomplete response from server. Please report this problem and try again later.")
@@ -226,6 +230,7 @@ class App extends Component {
               username: username,
               loginStatus: Shared.LoginStatus.LOGGEDIN
             })
+            this.props.history.push("/main-menu")
             break
           default:
             this.displayMessage("Incomplete response from server. Please report this problem and try again later.")
@@ -313,6 +318,7 @@ class App extends Component {
               break
             case Shared.ChangePasswordOutcome.SUCCESS:
               this.displayMessage("Password changed successfully.")
+              this.props.history.push("/account-manage")
               break
             default:
               this.displayMessage("Incomplete response from server. Please report this problem and try again later.")
@@ -335,31 +341,31 @@ class App extends Component {
 
   navigateLogin(){
     this.clearMessage()
-    window.location.assign("/login")
+    this.props.history.push("/login")
   }
   navigateManage(){
     this.clearMessage()
-    window.location.assign("/account-manage")
+    this.props.history.push("/account-manage")
   }
   navigateCreate(){
     this.clearMessage()
-    window.location.assign("/account-create")
+    this.props.history.push("/account-create")
   }
   navigateChangePassword(){
     this.clearMessage()
-    window.location.assign("/change-password")
+    this.props.history.push("/change-password")
   }
   navigateDelete(){
     this.clearMessage()
-    window.location.assign("/account-delete")
+    this.props.history.push("/account-delete")
   }
   navigateMainMenu(){
     this.clearMessage()
-    window.location.assign("/main-menu")
+    this.props.history.push("/main-menu")
   }
   navigateGameContent(){
     this.clearMessage()
-    window.location.assign("/game")
+    this.props.history.push("/game")
   }
 
   getMainContent(){
@@ -424,16 +430,35 @@ class App extends Component {
     }
   }
 
+  getNavLinks(){
+    if(this.state.loginStatus === Shared.LoginStatus.LOGGEDIN){
+      return(
+        <React.Fragment>
+          <Link to="/main-menu">Main Menu</Link>
+          <Link to="/game">Enter Game</Link>
+        </React.Fragment>
+      )
+    }
+    else{
+      return (
+        <Link to="/">Home</Link>
+      )
+    }
+  }
+
   render() {
     return (
       <React.Fragment>
         <header>
-          <h1>Absreim's Mafia React Client</h1>
+          <h2>Absreim's Mafia React Client</h2>
         </header>
         <nav>
-          <AccountMenu username={this.state.username} loginStatus={this.state.loginStatus} 
+          <div>
+            <AccountMenu username={this.state.username} loginStatus={this.state.loginStatus} 
             handleLogin={this.navigateLogin} handleLogout={this.logout} 
-            handleManage={this.navigateManage} />
+            handleManage={this.navigateManage} handleCreate={this.navigateCreate} />
+          </div>
+          <div>{this.getNavLinks()}</div>
         </nav>
         <main>{this.getMainContent()}</main>
         <footer>{this.state.userMessage}</footer>
@@ -442,4 +467,4 @@ class App extends Component {
   }
 }
 
-export default App
+export default withRouter(App)
