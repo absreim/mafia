@@ -16,6 +16,8 @@ import "./AccountMenu.css"
 import Shared from "./Shared.js"
 import filledPersonSvg from "./person_filled.svg"
 import hollowPersonSvg from "./person_hollow.svg"
+import trayArrowRight from "./tray_arrow_right.svg"
+import trayArrowDown from "./tray_arrow_down.svg"
 
 class AccountMenu extends Component{
     constructor(props){
@@ -50,14 +52,22 @@ class AccountMenu extends Component{
     }
     render(){
         let dropdownClass = "dropdown"
-        dropdownClass += this.state.menuVisible ? " dropdown__expanded" : 
-            " dropdown__collapsed"
+        let arrowImg = null
+        if(this.state.menuVisible){
+            dropdownClass += " dropdown__expanded"
+            arrowImg = <img src={trayArrowDown} alt="Down arrow indicating an expanded dropdown menu." />
+        }
+        else{
+            dropdownClass += " dropdown__collapsed"
+            arrowImg = <img src={trayArrowRight} alt="Right arrow indicating a collapsed dropdown menu." />
+        }
         if(this.props.loginStatus === Shared.LoginStatus.LOGGEDIN && this.props.username){
             return (
                 <React.Fragment>
                     <div onClick={this.toggleMenu} className="icon-username-box">
                         <img src={filledPersonSvg} alt="Filled wireframe person icon." />
                         <a>{this.props.username}</a>
+                        {arrowImg}
                     </div>
                     <div className={dropdownClass}>
                         <a onClick={this.handleLogout} className="dropdown__link">Log Out</a>
@@ -73,6 +83,7 @@ class AccountMenu extends Component{
                     <div onClick={this.toggleMenu} className="icon-username-box">
                         <img src={hollowPersonSvg} alt="Hollow wireframe person icon." />
                         <a>Not Logged In</a>
+                        {arrowImg}
                     </div>
                     <div className={dropdownClass}>
                         <a onClick={this.handleLogin} className="dropdown__link">Log In</a>

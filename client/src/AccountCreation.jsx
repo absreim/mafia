@@ -46,17 +46,17 @@ class AccountCreation extends Component {
             <form onSubmit={this.handleSubmit}>
                 <h2>Create a new account</h2>
                 <label htmlFor="username">Username:</label>
-                <input type="text" id="username" value={this.state.username} 
-                    onChange={this.handleUsernameChange} />
-                <label htmlFor="password">Password</label>
-                <input type="password" id="password" value={this.state.password} 
-                    onChange={this.handlePasswordChange} />
-                <label htmlFor="confirm">Confirm Password</label>
-                <input type="password" id="confirm" value={this.state.confirm} 
-                    onChange={this.handleConfirmChange} />
+                <input className="login-form__text-input" type="text" id="username" 
+                    value={this.state.username} onChange={this.handleUsernameChange} />
+                <label htmlFor="password">Password:</label>
+                <input className="login-form__text-input" type="password" id="password" 
+                    value={this.state.password} onChange={this.handlePasswordChange} />
+                <label htmlFor="confirm">Confirm Password:</label>
+                <input className="login-form__text-input" type="password" id="confirm" 
+                    value={this.state.confirm} onChange={this.handleConfirmChange} />
                 <input type="submit" value="Submit" />
-                <p>Already have an account? You may <a onClick={this.handleLoginLink}>log in </a> 
-                    to it instead.</p>
+                <p>Already have an account? You may <a className="login-help-text__link" 
+                    onClick={this.handleLoginLink}>log in </a> to it instead.</p>
             </form>
         )
     }

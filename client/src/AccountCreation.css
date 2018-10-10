@@ -1,1 +1,14 @@
-input {display: block;}
+.login-form__text-input {display: block;}
+.login-help-text__link {
+    border-bottom: 1px solid;
+    color: blue;
+}
+.login-help-text__link:focus {
+    border: 1px solid;
+}
+.login-help-text__link:hover {
+    cursor: pointer;
+}
+.login-help-text__link:active {
+    color: red;
+}
