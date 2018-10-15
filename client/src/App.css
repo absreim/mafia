@@ -1,4 +1,13 @@
 nav {
-  display: flex;
-  flex-direction: row;
+  display: table;
+}
+
+.nav-links-container {
+  display: table-cell;
+  margin-left: 2px;
+}
+
+.nav-link {
+  margin-left: 2px;
+  margin-right: 2px;
 }

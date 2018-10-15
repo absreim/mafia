@@ -3,12 +3,13 @@ User login interface.
 Required props:
 - submitCredentials(username, password) - function for
 submitting log in crendentials
-- createRedirect - function to redirect user to account
+- createUrl - URL for account
 creation interface
 */
 
 import React, {Component} from "react"
 import "./AccountLogin.css"
+import {Link} from "react-router-dom"
 
 class AccountLogin extends Component{
     constructor(props){
@@ -17,7 +18,6 @@ class AccountLogin extends Component{
         this.handleUsernameChange = this.handleUsernameChange.bind(this)
         this.handlePasswordChange = this.handlePasswordChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
-        this.handleCreateLink = this.handleCreateLink.bind(this)
     }
     handleUsernameChange(event){
         this.setState({username: event.target.value})
@@ -29,10 +29,6 @@ class AccountLogin extends Component{
         this.props.submitCredentials(this.state.username, this.state.password)
         event.preventDefault()
     }
-    handleCreateLink(event){
-        this.props.createRedirect()
-        event.preventDefault()
-    }
     render(){
         return(
             <form onSubmit={this.handleSubmit}>
@@ -42,7 +38,7 @@ class AccountLogin extends Component{
                 <label htmlFor="password">Password:</label>
                 <input type="password" id="password" value={this.state.password} onChange={this.handlePasswordChange} />
                 <input type="submit" value="Submit" />
-                <p>Don't have an account? <a onClick={this.handleCreateLink}>Create one.</a></p>
+                <p>Don't have an account? <Link to={this.props.createUrl}>Create one</Link>.</p>
             </form>
         )
     }

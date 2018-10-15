@@ -7,3 +7,23 @@
     color: white;
     background-color: black;
 }
+
+.button-container {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+}
+
+table {
+    border: 1px solid;
+    border-collapse: collapse;
+}
+
+td, th {
+    border-right: 1px solid;
+    border-left: 1px solid;
+}
+
+tr {
+    border-top: 1px solid;
+}

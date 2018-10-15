@@ -3,12 +3,12 @@ Account creation interface.
 Required props:
 - submitCrendentials(username, password, confirm) - function
 for submitting the credentials
-- loginRedirect - function to redirect user to log in
-interface instead
+- loginUrl - url of login page
 */
 
 import React, {Component} from "react"
 import "./AccountCreation.css"
+import {Link} from "react-router-dom"
 
 class AccountCreation extends Component {
     constructor(props){
@@ -22,7 +22,6 @@ class AccountCreation extends Component {
         this.handlePasswordChange = this.handlePasswordChange.bind(this)
         this.handleConfirmChange = this.handleConfirmChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
-        this.handleLoginLink = this.handleLoginLink.bind(this)
     }
     handleUsernameChange(event){
         this.setState({username: event.target.value})
@@ -38,9 +37,6 @@ class AccountCreation extends Component {
         this.props.submitCredentials(this.state.username, this.state.password, this.state.confirm)
         event.preventDefault()
     }
-    handleLoginLink(){
-        this.props.loginRedirect()
-    }
     render(){
         return(
             <form onSubmit={this.handleSubmit}>
@@ -55,8 +51,8 @@ class AccountCreation extends Component {
                 <input className="login-form__text-input" type="password" id="confirm" 
                     value={this.state.confirm} onChange={this.handleConfirmChange} />
                 <input type="submit" value="Submit" />
-                <p>Already have an account? You may <a className="login-help-text__link" 
-                    onClick={this.handleLoginLink}>log in </a> to it instead.</p>
+                <p>Already have an account? You may <Link to={this.props.loginUrl}>log in</Link> to 
+                    it instead.</p>
             </form>
         )
     }

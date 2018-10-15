@@ -37,35 +37,63 @@ class Lobby extends Component{
     render(){
         let lobbyGameRows = null
         if(this.props.lobbyGames){
-            lobbyGameRows = Object.keys(this.props.lobbyGames).map((gameName) => {
-                return(
-                    <tr key={gameName} onClick={() => this.handleClick(gameName)} className={gameName === this.state.selectedGame ? "games-table__row--selected" : "games-table__row"}>
-                        <td>{gameName}</td>
-                        <td>{this.props.lobbyGames[gameName].players.length}</td>
-                        <td>{this.props.lobbyGames[gameName].maxPlayers}</td>
-                        <td>{this.props.lobbyGames[gameName].numWerewolves}</td>
+            if(Object.keys(this.props.lobbyGames).length > 0){
+                lobbyGameRows = Object.keys(this.props.lobbyGames).map((gameName) => {
+                    return(
+                        <tr key={gameName} onClick={() => this.handleClick(gameName)} 
+                            className={gameName === this.state.selectedGame ? 
+                            "games-table__row--selected" : "games-table__row"}>
+                            <td>{gameName}</td>
+                            <td>{this.props.lobbyGames[gameName].players.length}</td>
+                            <td>{this.props.lobbyGames[gameName].maxPlayers}</td>
+                            <td>{this.props.lobbyGames[gameName].numWerewolves}</td>
+                        </tr>
+                    )}
+                )
+            }
+            else{
+                lobbyGameRows = (
+                    <tr>
+                        <td colSpan="4">No games in lobby</td>
                     </tr>
-                )}
-        )}
+                    )
+            }
+        }
         else{
             lobbyGameRows =
                 <tr>
                     <td>Waiting for lobby information to load...</td>
                 </tr>
         }
-        let playersInGameRows = null
-        if(this.state.selectedGame && this.props.lobbyGames[this.state.selectedGame]){
-            playersInGameRows = Array.from(this.props.lobbyGames[this.state.selectedGame].players).map((player) => {
-                return (
-                    <tr key={player}>
-                        <td>{player}</td>
-                    </tr>
+        let playersInGameArea = null
+        if(this.state.selectedGame){
+            if(this.state.selectedGame in this.props.lobbyGames){
+                let playersArray = Array.from(this.props.lobbyGames[this.state.selectedGame].players)
+                let playersInGameRows = playersArray.map((player) => {
+                    return (
+                        <tr key={player}>
+                            <td>{player}</td>
+                        </tr>
+                    )
+                })
+                playersInGameArea = (
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Players in Selected Game</th>
+                            </tr>
+                        </thead>
+                        <tbody>{playersInGameRows}</tbody>
+                    </table>
                 )
-            })
+            }
+            else{
+                playersInGameArea = <p>Error: the selected game does not appear to exist.</p>
+            }
         }
         return(
             <div>
-                <h2>Games Lobby</h2>
+                <h3>Games Lobby</h3>
                 <table>
                     <thead>
                         <tr>
@@ -80,16 +108,11 @@ class Lobby extends Component{
                     </thead>
                     <tbody>{lobbyGameRows}</tbody>
                 </table>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Players in Selected Game</th>
-                        </tr>
-                    </thead>
-                    <tbody>{playersInGameRows}</tbody>
-                </table>
-                <button onClick={this.handleJoin} disabled={!this.state.selectedGame}>Join Game</button>
-                <button onClick={this.handleCreate}>Create New Game</button>
+                {playersInGameArea}
+                <div className="button-container">
+                    <button onClick={this.handleJoin} disabled={!this.state.selectedGame}>Join Game</button>
+                    <button onClick={this.handleCreate}>Create New Game</button>
+                </div>
             </div>
         )
     }

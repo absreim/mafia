@@ -21,19 +21,11 @@ class Welcome extends Component{
     }
     render(){
         return(
-            <table>
-                <tbody>
-                    <tr>
-                        <td><h2>Welcome to Absreim's Mafia</h2></td>
-                    </tr>
-                    <tr>
-                        <td><button onClick={this.handleLogin}>Log in</button></td>
-                    </tr>
-                    <tr>
-                        <td><button onClick={this.handleCreate}>Create Account</button></td>
-                    </tr>
-                </tbody>
-            </table>
+            <React.Fragment>
+                <h3>Welcome to Absreim's Mafia</h3>
+                <button onClick={this.handleLogin}>Log in</button>
+                <button onClick={this.handleCreate}>Create Account</button>
+            </React.Fragment>
         )
     }
 }

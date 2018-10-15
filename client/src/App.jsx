@@ -386,9 +386,9 @@ class App extends Component {
             <MainMenu handleEnterGame={this.navigateGameContent} handleManage={this.navigateManage} 
               handleLogout={this.logout} username={this.state.username} />
           } />
-          <Route path="/account-create" render={() => 
+          <Route path="/account-create" render={({match, location, history}) => 
             <AccountCreation submitCredentials={this.createAccountWithConfirm} 
-              loginRedirect={this.navigateLogin} />
+              loginUrl="/login" match={match} location={location} history={history} />
             } />
           <Route path="/account-delete" render={() =>
             <AccountDelete submitPassword={this.deleteAccount} username={this.state.username} />
@@ -411,12 +411,12 @@ class App extends Component {
             <Welcome handleLogin={this.navigateLogin} handleCreate={this.navigateCreate} />
           } />
           <Route path="/login" render={() => 
-            <AccountLogin submitCredentials={this.login} createRedirect={this.navigateCreate} />
+            <AccountLogin submitCredentials={this.login} createUrl="/account-create" />
           } />
-          <Route path="/account-create" render={() => 
+          <Route path="/account-create" render={({match, location, history}) => 
             <AccountCreation submitCredentials={this.createAccountWithConfirm} 
-              loginRedirect={this.navigateLogin} />
-          } />
+              loginUrl="/login" match={match} location={location} history={history} />
+            } />
           <Redirect to="/" />
         </Switch>
       )
@@ -434,14 +434,14 @@ class App extends Component {
     if(this.state.loginStatus === Shared.LoginStatus.LOGGEDIN){
       return(
         <React.Fragment>
-          <Link to="/main-menu">Main Menu</Link>
-          <Link to="/game">Enter Game</Link>
+          <Link to="/main-menu" className="nav-link">Main Menu</Link>
+          <Link to="/game" className="nav-link">Enter Game</Link>
         </React.Fragment>
       )
     }
     else{
       return (
-        <Link to="/">Home</Link>
+        <Link to="/" className="nav-link">Home</Link>
       )
     }
   }
@@ -458,7 +458,7 @@ class App extends Component {
             handleLogin={this.navigateLogin} handleLogout={this.logout} 
             handleManage={this.navigateManage} handleCreate={this.navigateCreate} />
           </div>
-          <div>{this.getNavLinks()}</div>
+          <div className="nav-links-container">{this.getNavLinks()}</div>
         </nav>
         <main>{this.getMainContent()}</main>
         <footer>{this.state.userMessage}</footer>
