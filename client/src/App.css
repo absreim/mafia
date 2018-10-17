@@ -4,10 +4,20 @@ nav {
 
 .nav-links-container {
   display: table-cell;
-  margin-left: 2px;
+  padding-left: 10px;
 }
 
 .nav-link {
-  margin-left: 2px;
-  margin-right: 2px;
+  margin-left: 3px;
+  margin-right: 3px;
+  vertical-align: middle;
+}
+
+.dismiss-link {
+  cursor: pointer;
+  color: blue;
+}
+
+.dismiss-link--hidden {
+  display: none;
 }

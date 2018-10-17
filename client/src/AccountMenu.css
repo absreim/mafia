@@ -3,7 +3,6 @@
     position: absolute;
     background-color: white;
     cursor: pointer;
-    border: 2px solid;
 }
 
 .dropdown__collapsed {
@@ -20,10 +19,18 @@
     padding: 3px;
 }
 
+.dropdown__link:hover {
+    background-color: lightgray;
+}
+
 .icon-username-box {
     cursor: pointer;
-    border: 2px solid;
+    border: 1px solid;
     padding: 5px;
+}
+
+.icon-username-box:hover {
+    background-color: lightgray;
 }
 
 img {

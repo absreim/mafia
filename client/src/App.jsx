@@ -38,6 +38,7 @@ class App extends Component {
     this.deleteAccount = this.deleteAccount.bind(this)
     this.login = this.login.bind(this)
     this.changePassword = this.changePassword.bind(this)
+    this.clearMessage = this.clearMessage.bind(this)
   }
   componentDidMount(){
     this.updateLoginStatus()
@@ -447,6 +448,10 @@ class App extends Component {
   }
 
   render() {
+    let dismissLinkClass = "dismiss-link"
+    if(this.state.userMessage.length === 0){
+      dismissLinkClass += " dismiss-link--hidden"
+    }
     return (
       <React.Fragment>
         <header>
@@ -461,7 +466,9 @@ class App extends Component {
           <div className="nav-links-container">{this.getNavLinks()}</div>
         </nav>
         <main>{this.getMainContent()}</main>
-        <footer>{this.state.userMessage}</footer>
+        <footer>
+          <p>{this.state.userMessage} <a onClick={this.clearMessage} className={dismissLinkClass}>Dismiss</a></p>
+        </footer>
       </React.Fragment>
     )
   }
