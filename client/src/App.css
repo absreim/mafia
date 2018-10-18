@@ -11,6 +11,20 @@ nav {
   margin-left: 3px;
   margin-right: 3px;
   vertical-align: middle;
+  cursor: pointer;
+  color: blue;
+}
+
+.nav-link:active {
+  color: red;
+}
+
+.nav-link:visited {
+  color: purple;
+}
+
+.nav-link:focus {
+  border: 1px dashed;
 }
 
 .dismiss-link {
