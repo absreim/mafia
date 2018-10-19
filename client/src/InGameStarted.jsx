@@ -39,7 +39,7 @@ class InGameStarted extends Component{
             })
             return (
                 <div>
-                    <h2>The game has started!</h2>
+                    <h3>The game has started!</h3>
                     <p>You are a werewolf.</p>
                     <p>Take note of the lists of werewolves and villagers and 
                         click the "Ready" button to continue.</p>
@@ -75,7 +75,7 @@ class InGameStarted extends Component{
         else{
             return (
                 <div>
-                    <h2>The game has started!</h2>
+                    <h3>The game has started!</h3>
                     <p>You are a villager.</p>
                     <p>Take note of the list of players and click the "Ready" button to continue.</p>
                     <table>

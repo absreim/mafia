@@ -114,7 +114,7 @@ class InGameOver extends Component {
         }
         return(
             <div>
-                <h2>The game is over.</h2>
+                <h3>The game is over.</h3>
                 {outcomeDesc}
                 <p>Acknowledge the results to exit the game and return to the lobby.</p>
                 {livingVictorsTable}

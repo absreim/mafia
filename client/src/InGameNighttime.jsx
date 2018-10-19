@@ -29,22 +29,48 @@ class InGameNighttime extends Component{
     }
     render(){
         if(this.props.playerIsWerewolf){
-            const deadVillagersRows = Array.from(this.props.deadVillagers).map((player) => {
-                return (
-                    <tr key={player}
-                        className="player-list__row">
-                        <td>{player}</td>
-                    </tr>
+            let deadVillagersTable = null
+            let deadWerewolvesTable = null
+            if(this.props.deadVillagers.size > 0){
+                const deadVillagersRows = Array.from(this.props.deadVillagers).map((player) => {
+                    return (
+                        <tr key={player}
+                            className="player-list__row">
+                            <td>{player}</td>
+                        </tr>
+                    )
+                })
+                deadVillagersTable = (
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Dead Villagers</th>
+                            </tr>
+                        </thead>
+                        <tbody>{deadVillagersRows}</tbody>
+                    </table>
                 )
-            })
-            const deadWerewolvesRows = Array.from(this.props.deadWerewolves).map((player) => {
-                return (
-                    <tr key={player}
-                        className="player-list__row">
-                        <td>{player}</td>
-                    </tr>
+            }
+            if(this.props.deadWerewolves.size > 0){
+                const deadWerewolvesRows = Array.from(this.props.deadWerewolves).map((player) => {
+                    return (
+                        <tr key={player}
+                            className="player-list__row">
+                            <td>{player}</td>
+                        </tr>
+                    )
+                })
+                deadWerewolvesTable = (
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Dead Werewolves</th>
+                            </tr>
+                        </thead>
+                        <tbody>{deadWerewolvesRows}</tbody>
+                    </table>
                 )
-            })
+            }
             const livingWerewolvesRows =  Array.from(this.props.livingWerewolves).map((player) => {
                 return (
                     <tr key={player} className="player-list__row">
@@ -89,7 +115,7 @@ class InGameNighttime extends Component{
             }
             return(
                 <div>
-                    <h2>It is the nighttime.</h2>
+                    <h3>It is the nighttime.</h3>
                     <p>In this phase, werewolves choose a villager to kill and vote on the killing.</p>
                     <p>{statusDescText}</p>
                     <table>
@@ -108,22 +134,8 @@ class InGameNighttime extends Component{
                         </thead>
                         <tbody>{livingWerewolvesRows}</tbody>
                     </table>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Dead Villagers</th>
-                            </tr>
-                        </thead>
-                        <tbody>{deadVillagersRows}</tbody>
-                    </table>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Dead Werewolves</th>
-                            </tr>
-                        </thead>
-                        <tbody>{deadWerewolvesRows}</tbody>
-                    </table>
+                    {deadVillagersTable}
+                    {deadWerewolvesTable}
                     {interactionArea}
                 </div>
             )
@@ -138,15 +150,28 @@ class InGameNighttime extends Component{
                     )
                 }
             )
-            const deadPlayersRows = Array.from(this.props.deadVillagers).map(
-                (player) => {
-                    return(
-                        <tr key={player}>
-                            <td>{player}</td>
-                        </tr>
-                    )
-                }
-            )
+            let deadPlayersTable = null
+            if(this.props.deadVillagers.size > 0){
+                const deadPlayersRows = Array.from(this.props.deadVillagers).map(
+                    (player) => {
+                        return(
+                            <tr key={player}>
+                                <td>{player}</td>
+                            </tr>
+                        )
+                    }
+                )
+                deadPlayersTable = (
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Dead Players</th>
+                            </tr>
+                        </thead>
+                        <tbody>{deadPlayersRows}</tbody>
+                    </table>
+                )
+            }
             let statusDescText = null
             if(this.props.livingVillagers.has(this.props.username)){
                 statusDescText = "As a villager you are currently sleeping and must wait until the daytime."
@@ -156,7 +181,7 @@ class InGameNighttime extends Component{
             }
             return (
                 <div>
-                    <h2>It is the nighttime.</h2>
+                    <h3>It is the nighttime.</h3>
                     <p>In this phase, werewolves choose a villager to kill.</p>
                     <p>{statusDescText}</p>
                     <table>
@@ -167,14 +192,7 @@ class InGameNighttime extends Component{
                         </thead>
                         <tbody>{livingPlayersRows}</tbody>
                     </table>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Dead Players</th>
-                            </tr>
-                        </thead>
-                        <tbody>{deadPlayersRows}</tbody>
-                    </table>
+                    {deadPlayersTable}
                     <p>Waiting for a werewolf to suggest a target for killing.</p>
                 </div>
             )

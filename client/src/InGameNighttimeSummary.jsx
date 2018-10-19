@@ -36,13 +36,16 @@ class InGameNighttimeSummary extends Component{
                 </tr>
             )
         })
-        const deadVillagersRows = Array.from(this.props.deadVillagers).map((player) => {
-            return (
-                <tr key={player}>
-                    <td>{player}</td>
-                </tr>
-            )
-        })
+        let deadVillagersRows = null
+        if(this.props.deadVillagers.size > 0){
+            deadVillagersRows = Array.from(this.props.deadVillagers).map((player) => {
+                return (
+                    <tr key={player}>
+                        <td>{player}</td>
+                    </tr>
+                )
+            })
+        }
         let outcomeDesc = <p>The player&nbsp;
             <span className="chosen-player-desc__player-name">{this.props.chosenPlayer}</span> was killed.</p>
         let tablesArea = null
@@ -54,13 +57,39 @@ class InGameNighttimeSummary extends Component{
                         was not killed. Werewolves will choose a new villager to vote on.</p>
                 )
             }
-            const deadWerewolvesRows = Array.from(this.props.deadWerewolves).map((player) => {
-                return (
-                    <tr key={player}>
-                        <td>{player}</td>
-                    </tr>
+            let deadVillagersTable = null
+            if(deadVillagersRows){
+                deadVillagersTable = (
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Dead Villagers</th>
+                            </tr>
+                        </thead>
+                        <tbody>{deadVillagersRows}</tbody>
+                    </table>
                 )
-            })
+            }
+            let deadWerewolvesTable = null
+            if(this.props.deadWerewolves.size > 0){
+                const deadWerewolvesRows = Array.from(this.props.deadWerewolves).map((player) => {
+                    return (
+                        <tr key={player}>
+                            <td>{player}</td>
+                        </tr>
+                    )
+                })
+                deadVillagersTable = (
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Dead Werewolves</th>
+                            </tr>
+                        </thead>
+                        <tbody>{deadWerewolvesRows}</tbody>
+                    </table>
+                )
+            }
             const votesRows = Object.keys(this.props.votes).map((player) => {
                 let voteDesc = "?"
                 if(this.props.votes[player] === true){
@@ -87,8 +116,8 @@ class InGameNighttimeSummary extends Component{
                                 <th>Name</th>
                                 <th>Vote</th>
                             </tr>
-                            <tbody>{votesRows}</tbody>
                         </thead>
+                        <tbody>{votesRows}</tbody>
                     </table>
                     <table>
                         <thead>
@@ -98,22 +127,8 @@ class InGameNighttimeSummary extends Component{
                         </thead>
                         <tbody>{livingVillagersRows}</tbody>
                     </table>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Dead Villagers</th>
-                            </tr>
-                        </thead>
-                        <tbody>{deadVillagersRows}</tbody>
-                    </table>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Dead Werewolves</th>
-                            </tr>
-                        </thead>
-                        <tbody>{deadWerewolvesRows}</tbody>
-                    </table>
+                    {deadVillagersTable}
+                    {deadWerewolvesTable}
                 </React.Fragment>
             )
         }
@@ -122,6 +137,19 @@ class InGameNighttimeSummary extends Component{
                 outcomeDesc = (
                     <p>The vote failed and no villager was killed. 
                         Werewolves will choose a new villager to vote on.</p>
+                )
+            }
+            let deadVillagersTable = null
+            if(deadVillagersRows){
+                deadVillagersTable = (
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Dead Players</th>
+                            </tr>
+                        </thead>
+                        <tbody>{deadVillagersRows}</tbody>
+                    </table>
                 )
             }
             tablesArea = (
@@ -134,20 +162,13 @@ class InGameNighttimeSummary extends Component{
                         </thead>
                         <tbody>{livingVillagersRows}</tbody>
                     </table>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Dead Players</th>
-                            </tr>
-                        </thead>
-                        <tbody>{deadVillagersRows}</tbody>
-                    </table>
+                    {deadVillagersTable}
                 </React.Fragment>
             )
         }
         return (
             <div>
-                <h2>Werewolves have finished voting on whether to kill a chosen villager.</h2>
+                <h3>Werewolves have finished voting on whether to kill a chosen villager.</h3>
                 <p>Please acknowledge the results.</p>
                 {outcomeDesc}
                 {tablesArea}

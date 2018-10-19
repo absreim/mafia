@@ -24,7 +24,6 @@ class GameContent extends Component{
         super(props)
         this.state = {
             phase: GameContentPhase.INITIAL,
-            socket: null,
             socketConnectError: null,
             socketConnectTimeout: null,
             socketGeneralError: null,
@@ -45,13 +44,11 @@ class GameContent extends Component{
         this.createGame = this.createGame.bind(this)
         this.sendGameMessage = this.sendGameMessage.bind(this)
         this.navigateLobbyFromCreate = this.navigateLobbyFromCreate.bind(this)
-    }
-    componentDidMount(){
-        const socket = io({
+        this.socket = io({
             autoConnect: false,
             reconnection: false
         })
-        socket.on("connect", (function(){
+        this.socket.on("connect", (function(){
             this.setState({
                 socketConnectError: null,
                 socketConnectTimeout: null,
@@ -63,9 +60,9 @@ class GameContent extends Component{
                 gameName: null,
                 phase: GameContentPhase.AWAITINGINITIALSTATUS
             })
-            socket.emit(Shared.ClientSocketEvent.INITIALSTATUSREQUEST)
+            this.socket.emit(Shared.ClientSocketEvent.INITIALSTATUSREQUEST)
         }).bind(this))
-        socket.on("disconnect", (function(){
+        this.socket.on("disconnect", (function(){
             this.setState({
                 socketConnectError: null,
                 socketConnectTimeout: null,
@@ -78,7 +75,7 @@ class GameContent extends Component{
                 phase: GameContentPhase.DISCONNECTED
             })
         }).bind(this))
-        socket.on("connect_error", (function(error){
+        this.socket.on("connect_error", (function(error){
             this.setState({
                 socketConnectError: error,
                 socketConnectTimeout: null,
@@ -86,7 +83,7 @@ class GameContent extends Component{
             })
             console.log("Error encountered while trying to establish socket.io connection: " + error)
         }).bind(this))
-        socket.on("connect_timeout", (function(timeout){
+        this.socket.on("connect_timeout", (function(timeout){
             this.setState({
                 socketConnectError: null,
                 socketConnectTimeout: timeout,
@@ -94,7 +91,7 @@ class GameContent extends Component{
             })
             console.log("Timeout reached while trying to establish socket.io connection: " + timeout)
         }).bind(this))
-        socket.on("error", (function(error){
+        this.socket.on("error", (function(error){
             this.setState({
                 socketConnectError: null,
                 socketConnectTimeout: null,
@@ -102,7 +99,7 @@ class GameContent extends Component{
             })
             console.log("Error encountered by the socket.io client: " + error)
         }).bind(this))
-        socket.on(Shared.ServerSocketEvent.INITIALSTATUSREPLY, (function(data){
+        this.socket.on(Shared.ServerSocketEvent.INITIALSTATUSREPLY, (function(data){
             switch(data.type){
                 case Shared.StatusType.INGAME:
                     this.setState({
@@ -133,7 +130,7 @@ class GameContent extends Component{
                     this.setState({message: "Unrecognized type in status message received."})
             }
         }).bind(this))
-        socket.on(Shared.ServerSocketEvent.STATUSREPLY, (function(data){
+        this.socket.on(Shared.ServerSocketEvent.STATUSREPLY, (function(data){
             switch(data.type){
                 case Shared.StatusType.INGAME:
                     this.setState({
@@ -169,14 +166,14 @@ class GameContent extends Component{
                             gameName: null,
                             gameState: null
                         })
-                        this.state.socket.emit(Shared.ClientSocketEvent.SUBSCRIBELOBBYUPDATES)
+                        this.socket.emit(Shared.ClientSocketEvent.SUBSCRIBELOBBYUPDATES)
                     }
                     break
                 default:
                     this.setState({message: "Unrecognized type in status message received."})
             }
         }).bind(this))
-        socket.on(Shared.ServerSocketEvent.LOBBYSTATEREPLY, (function(data){
+        this.socket.on(Shared.ServerSocketEvent.LOBBYSTATEREPLY, (function(data){
             if(data){
                 this.setState({lobbyState: data})
             }
@@ -184,18 +181,18 @@ class GameContent extends Component{
                 console.log("Warning: received no data in message about lobby state.")
             }
         }).bind(this))
-        socket.on(Shared.ServerSocketEvent.LOBBYUPDATESSUBSCRIBED, (function(){
+        this.socket.on(Shared.ServerSocketEvent.LOBBYUPDATESSUBSCRIBED, (function(){
             if(!this.state.lobbyUpdatesSubscribed){
                 this.setState({lobbyUpdatesSubscribed: true})
                 if(!this.state.lobbyState){
-                    this.state.socket.emit(Shared.ClientSocketEvent.LOBBYSTATEREQUEST)
+                    this.socket.emit(Shared.ClientSocketEvent.LOBBYSTATEREQUEST)
                 }
             }
             else{
                 console.log("Info: possible race condition encountered. LOBBYUPDATESSUBSCRIBED message received from server at unexpected time.")
             }
         }).bind(this))
-        socket.on(Shared.ServerSocketEvent.LOBBYUPDATESUNSUBSCRIBED, (function(){
+        this.socket.on(Shared.ServerSocketEvent.LOBBYUPDATESUNSUBSCRIBED, (function(){
             if(this.state.lobbyUpdatesSubscribed){
                 this.setState({lobbyUpdatesSubscribed: false})
             }
@@ -203,7 +200,7 @@ class GameContent extends Component{
                 console.log("Info: possible race condition encountered. LOBBYUPDATESUNSUBSCRIBED message received from server at unexpected time.")
             }
         }).bind(this))
-        socket.on(Shared.ServerSocketEvent.LOBBYUPDATE, (function(data){
+        this.socket.on(Shared.ServerSocketEvent.LOBBYUPDATE, (function(data){
             if(this.state.lobbyUpdatesSubscribed && this.state.lobbyState){
                 if(data.type === Shared.LobbyUpdate.GAMECREATED){
                     if(data.game && data.numPlayers && data.numWerewolves && data.player){
@@ -275,7 +272,7 @@ class GameContent extends Component{
                 }
             }
         }).bind(this))
-        socket.on(Shared.ServerSocketEvent.CREATEGAMEOUTCOME, (function(data){
+        this.socket.on(Shared.ServerSocketEvent.CREATEGAMEOUTCOME, (function(data){
             // no effort made to preserve order when it comes to requests and outcomes, since
             // the client is forced to accept whatever ultimate outcome is given the client last
             switch(data.type){
@@ -286,7 +283,7 @@ class GameContent extends Component{
                         lobbyGameState: data.gameState,
                         gameName: data.gameName
                     })
-                    this.state.socket.emit(Shared.ClientSocketEvent.UNSUBSCRIBELOBBYUPDATES)
+                    this.socket.emit(Shared.ClientSocketEvent.UNSUBSCRIBELOBBYUPDATES)
                     break
                 case Shared.CreateGameOutcome.ALREADYINGAME:
                     this.setState({message: "Server reports that you are already in a game and must leave it before creating a new one. Please report this issue and try again later."})
@@ -314,7 +311,7 @@ class GameContent extends Component{
                     this.setState({message: "Unrecognized message received from server in response to request to create game. Please report this issue and try again later."})
             }
         }).bind(this))
-        socket.on(Shared.ServerSocketEvent.JOINGAMEOUTCOME, (function(data){
+        this.socket.on(Shared.ServerSocketEvent.JOINGAMEOUTCOME, (function(data){
             switch(data.type){
                 case Shared.JoinGameOutcome.SUCCESS:
                     this.setState({
@@ -344,7 +341,7 @@ class GameContent extends Component{
                     this.setState({message: "Unrecognized message received from server in response to request to join game. Please report this issue and try again later."})
             }
         }).bind(this))
-        socket.on(Shared.ServerSocketEvent.LEAVEGAMEOUTCOME, (function(data){
+        this.socket.on(Shared.ServerSocketEvent.LEAVEGAMEOUTCOME, (function(data){
             switch(data){
                 case Shared.LeaveGameOutcome.SUCCESS:
                     this.requestStateDetails()
@@ -364,7 +361,7 @@ class GameContent extends Component{
                     this.setState({message: "Unrecognized message received from server in response to request to leave game. Please report this issue and try again later."})
             }
         }).bind(this))
-        socket.on(Shared.ServerSocketEvent.LOBBYGAMESTATEREPLY, (function(data){
+        this.socket.on(Shared.ServerSocketEvent.LOBBYGAMESTATEREPLY, (function(data){
             if(data){
                 if(data.type){
                     if(data.type === Shared.LobbyGameStateRequestOutcome.SUCCESS){
@@ -390,12 +387,12 @@ class GameContent extends Component{
                 this.setState({message: "Lobby game state update message received, but no data was present."})
             }
         }).bind(this))
-        socket.on(Shared.ServerSocketEvent.GAMESTARTED, (function(){
+        this.socket.on(Shared.ServerSocketEvent.GAMESTARTED, (function(){
             if(this.state.phase !== GameContentPhase.AWAITINGINITIALSTATUS && this.state.phase !== GameContentPhase.PREVIOUSSTATUSPAGE){
-                this.state.socket.emit(Shared.ClientSocketEvent.GAMEACTION, {type: Shared.ClientMessageType.GAMESTATEREQ})
+                this.socket.emit(Shared.ClientSocketEvent.GAMEACTION, {type: Shared.ClientMessageType.GAMESTATEREQ})
             }
         }).bind(this))
-        socket.on(Shared.ServerSocketEvent.GAMEACTION, (function(data){
+        this.socket.on(Shared.ServerSocketEvent.GAMEACTION, (function(data){
             if(this.state.phase !== GameContentPhase.AWAITINGINITIALSTATUS && this.state.phase !== GameContentPhase.PREVIOUSSTATUSPAGE){
                 if(data && data.type){
                     switch(data.type){
@@ -415,7 +412,7 @@ class GameContent extends Component{
                             }
                             else{
                                 console.log("Warning: received VOTECAST message when game state is not known. Requesting game state update.")
-                                this.state.socket.emit(Shared.ClientSocketEvent.GAMEACTION, Shared.ClientMessageType.GAMESTATEREQ)
+                                this.socket.emit(Shared.ClientSocketEvent.GAMEACTION, Shared.ClientMessageType.GAMESTATEREQ)
                             }
                             break
                         case Shared.ServerMessageType.ACKNOWLEDGEMENT:
@@ -434,7 +431,7 @@ class GameContent extends Component{
                             }
                             else{
                                 console.log("Warning: received VOTECAST message when game state is not known. Requesting game state update.")
-                                this.state.socket.emit(Shared.ClientSocketEvent.GAMEACTION, Shared.ClientMessageType.GAMESTATEREQ)
+                                this.socket.emit(Shared.ClientSocketEvent.GAMEACTION, Shared.ClientMessageType.GAMESTATEREQ)
                             }
                             break
                         case Shared.ServerMessageType.GAMESTATEINFO:
@@ -454,21 +451,23 @@ class GameContent extends Component{
                 }
             }
         }).bind(this))
-        socket.on(Shared.ServerSocketEvent.GAMEENDED, (function(data){
-            this.state.socket.emit(Shared.ClientSocketEvent.STATUSREQUEST)
+        this.socket.on(Shared.ServerSocketEvent.GAMEENDED, (function(data){
+            this.socket.emit(Shared.ClientSocketEvent.STATUSREQUEST)
         }).bind(this))
-        this.setState({socket: socket})
+    }
+    componentDidMount(){
+        this.socket.open()
     }
     componentWillUnmount(){
         if(this.state.socketConnected){
-            this.state.socket.close()
+            this.socket.close()
         }
     }
     requestStateDetails(){
-        this.state.socket.emit(Shared.ClientSocketEvent.STATUSREQUEST)
+        this.socket.emit(Shared.ClientSocketEvent.STATUSREQUEST)
     }
     connectSocket(){
-        this.state.socket.open()
+        this.socket.open()
     }
     handleMainMenu(){
         this.setState({message: null})
@@ -481,7 +480,7 @@ class GameContent extends Component{
     navigateCreate(){
         this.setState({message: null})
         if(this.state.phase === GameContentPhase.INLOBBY){
-            this.state.socket.emit(Shared.ClientSocketEvent.UNSUBSCRIBELOBBYUPDATES)
+            this.socket.emit(Shared.ClientSocketEvent.UNSUBSCRIBELOBBYUPDATES)
             this.setState({lobbyState: null})
             this.setState({phase: GameContentPhase.CREATEGAME})
         }
@@ -501,7 +500,7 @@ class GameContent extends Component{
     createGame(name, numPlayers, numWerewolves){
         this.setState({message: null})
         if(this.state.phase === GameContentPhase.CREATEGAME){
-            this.state.socket.emit(Shared.ClientSocketEvent.CREATEGAME, {
+            this.socket.emit(Shared.ClientSocketEvent.CREATEGAME, {
                 name: name,
                 numPlayers: numPlayers,
                 numWerewolves: numWerewolves
@@ -513,14 +512,14 @@ class GameContent extends Component{
     }
     joinGame(gameName){
         this.setState({message: null})
-        this.state.socket.emit(Shared.ClientSocketEvent.JOINGAME, {name: gameName})
+        this.socket.emit(Shared.ClientSocketEvent.JOINGAME, {name: gameName})
     }
     leaveGame(){
         this.setState({message: null})
-        this.state.socket.emit(Shared.ClientSocketEvent.LEAVEGAME, {name: this.state.gameName})
+        this.socket.emit(Shared.ClientSocketEvent.LEAVEGAME, {name: this.state.gameName})
     }
     sendGameMessage(message){
-        this.state.socket.emit(Shared.ClientSocketEvent.GAMEACTION, message)
+        this.socket.emit(Shared.ClientSocketEvent.GAMEACTION, message)
     }
     cloneGameState(gameState){
         if(gameState){
@@ -587,8 +586,8 @@ class GameContent extends Component{
                     content =
                         <div>
                             <h3>Connect to the Game</h3>
-                            <button type="button" onClick={this.connectSocket}>Connect</button>
-                            <button type="button" onClick={this.handleMainMenu}>Return to Main Menu</button>
+                            <p>Attempting to connect to the server. When the connection is successful, the
+                                page will change automatically.</p>
                         </div>
                 }
                 break

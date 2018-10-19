@@ -245,15 +245,15 @@ class InGame extends Component{
                                     deadVillagers={deadVillagersSet} acks={new Set(this.props.gameState.acks)} 
                                     sendAck={this.sendAck}/>
                     default:
-                        return <h2>Error: unrecognized game state data received from server.</h2>
+                        return <h3>Error: unrecognized game state data received from server.</h3>
                 }
             }
             else{
-                return <h2>Error: cannot find your player in the game.</h2>
+                return <h3>Error: cannot find your player in the game.</h3>
             }
         }
         else{
-            return <h2>No game data available to display.</h2>
+            return <h3>No game data available to display.</h3>
         }
     }
 }

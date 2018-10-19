@@ -77,29 +77,31 @@ class InGameDaytimeSummary extends Component{
                     </thead>
                 </table>
             )
-            const deadRows = Object.keys(this.props.deadPlayers).map((player) => {
+            if(this.props.deadPlayers.size > 0){
+                const deadRows = Object.keys(this.props.deadPlayers).map((player) => {
                 const faction = this.props.livingPlayers[player] ? "Werewolf" : "Villager"
-                return(
-                    <tr key={player}>
-                        <td>{player}</td>
-                        <td>{faction}</td>
-                    </tr>
+                    return(
+                        <tr key={player}>
+                            <td>{player}</td>
+                            <td>{faction}</td>
+                        </tr>
+                    )
+                })
+                deadTable = (
+                    <table>
+                        <thead>
+                            <tr>
+                                <th colSpan="2">Dead Players and their Faction</th>
+                            </tr>
+                            <tr>
+                                <th>Name</th>
+                                <th>Faction</th>
+                            </tr>
+                        </thead>
+                        <tbody>{deadRows}</tbody>
+                    </table>
                 )
-            })
-            deadTable = (
-                <table>
-                    <thead>
-                        <tr>
-                            <th colSpan="2">Dead Players and their Faction</th>
-                        </tr>
-                        <tr>
-                            <th>Name</th>
-                            <th>Faction</th>
-                        </tr>
-                    </thead>
-                    <tbody>{deadRows}</tbody>
-                </table>
-            )
+            }
         }
         else{
             const votesRows = Object.keys(this.props.votes).map((player) => {
@@ -131,30 +133,32 @@ class InGameDaytimeSummary extends Component{
                     </thead>
                 </table>
             )
-            const deadRows = Object.keys(this.props.deadPlayers).map((player) => {
-                return(
-                    <tr key={player}>
-                        <td>{player}</td>
-                    </tr>
+            if(this.props.deadPlayers.size > 0){
+                const deadRows = Object.keys(this.props.deadPlayers).map((player) => {
+                    return(
+                        <tr key={player}>
+                            <td>{player}</td>
+                        </tr>
+                    )
+                })
+                deadTable = (
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Dead Players</th>
+                            </tr>
+                            <tr>
+                                <th>Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>{deadRows}</tbody>
+                    </table>
                 )
-            })
-            deadTable = (
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Dead Players</th>
-                        </tr>
-                        <tr>
-                            <th>Name</th>
-                        </tr>
-                    </thead>
-                    <tbody>{deadRows}</tbody>
-                </table>
-            )
+            }
         }
         return(
             <div>
-                <h2>Daytime voting has ended.</h2>
+                <h3>Daytime voting has ended.</h3>
                 {outcomeDesc}
                 {votesTable}
                 {deadTable}
