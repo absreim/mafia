@@ -39,7 +39,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.post("/api/login", function(req, res){
     if(req.session){
         if(req.session.userId){
-            res.status(200).send({outcome: Shared.LoginOutcome.LOGGEDIN})
+            res.send({outcome: Shared.LoginOutcome.LOGGEDIN})
         }
         else{
             if(req.body.username && req.body.password){
@@ -47,7 +47,7 @@ app.post("/api/login", function(req, res){
                     if(err){
                         res.send({outcome: Shared.LoginOutcome.INTERNALERROR})
                     }
-                    if(data){
+                    else if(data){
                         req.session.userId = req.body.username
                         res.send({outcome: Shared.LoginOutcome.SUCCESS})
                     }

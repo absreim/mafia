@@ -28,7 +28,7 @@ class LobbyGameWaiting extends Component {
         }
         return(
             <div>
-                <h2>In Game: {this.props.gameName}</h2>
+                <h3>In Game: {this.props.gameName}</h3>
                 <p>Waiting for players. Game will start automatically when needed number of players is reached.</p>
                 <p>Needed number of players: {this.props.gameState.maxPlayers}</p>
                 <p>Number of werewolves: {this.props.gameState.numWerewolves}</p>

@@ -15,7 +15,7 @@ import Welcome from "./Welcome"
 import AccountMenu from "./AccountMenu"
 import GameContent from "./GameContent"
 import Shared from "./Shared"
-import {Switch, Route, Redirect, Link, withRouter} from "react-router-dom"
+import {Switch, Route, Redirect, withRouter} from "react-router-dom"
 
 class App extends Component {
   constructor(props){
@@ -39,6 +39,9 @@ class App extends Component {
     this.login = this.login.bind(this)
     this.changePassword = this.changePassword.bind(this)
     this.clearMessage = this.clearMessage.bind(this)
+    this.handleHomeLink = this.handleHomeLink.bind(this)
+    this.handleGameLink = this.handleGameLink.bind(this)
+    this.handleMainLink = this.handleMainLink.bind(this)
   }
   componentDidMount(){
     this.updateLoginStatus()
@@ -369,6 +372,25 @@ class App extends Component {
     this.props.history.push("/game")
   }
 
+  // Navbar link click event handlers. Used to add the additional functionality
+  // of clearing and status messages.
+
+  handleMainLink(event){
+    event.preventDefault()
+    this.clearMessage()
+    this.props.history.push("/main-menu")
+  }
+  handleGameLink(event){
+    event.preventDefault()
+    this.clearMessage()
+    this.props.history.push("/game")
+  }
+  handleHomeLink(event){
+    event.preventDefault()
+    this.clearMessage()
+    this.props.history.push("/")
+  }
+
   getMainContent(){
     if(this.state.loginStatus === null){
       return (
@@ -435,14 +457,14 @@ class App extends Component {
     if(this.state.loginStatus === Shared.LoginStatus.LOGGEDIN){
       return(
         <React.Fragment>
-          <Link to="/main-menu" className="nav-link">Main Menu</Link>
-          <Link to="/game" className="nav-link">Enter Game</Link>
+          <a href="/main-menu" className="nav-link" onClick={this.handleMainLink}>Main Menu</a>
+          <a href="/game" className="nav-link" onClick={this.handleGameLink}>Enter Game</a>
         </React.Fragment>
       )
     }
     else{
       return (
-        <Link to="/" className="nav-link">Home</Link>
+        <a href="/" className="nav-link" onClick={this.handleHomeLink}>Home</a>
       )
     }
   }

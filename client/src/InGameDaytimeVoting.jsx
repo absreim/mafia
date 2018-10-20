@@ -90,7 +90,7 @@ class InGameDaytimeVoting extends Component{
             const interactionArea = playerIsAlive ? livingInteractionArea : deadInteractionArea
             return(
                 <div>
-                    <h2>It is time to vote in the daytime to execute a suspected werewolf.</h2>
+                    <h3>It is time to vote in the daytime to execute a suspected werewolf.</h3>
                     <p>The chosen player is&nbsp;
                         <span className=".chosen-player-desc__player-name">{this.props.chosenPlayer}</span>.</p>
                     <p>You are a werewolf and you are {deathStatusString}.</p>
@@ -145,7 +145,7 @@ class InGameDaytimeVoting extends Component{
             const interactionArea = playerIsAlive ? livingInteractionArea : deadInteractionArea
             return(
                 <div>
-                    <h2>It is time to vote in the daytime to execute a suspected werewolf.</h2>
+                    <h3>It is time to vote in the daytime to execute a suspected werewolf.</h3>
                     <p>The chosen player is&nbsp;
                         <span className=".chosen-player-desc__player-name">{this.props.chosenPlayer}</span>.</p>
                     <p>You are a villager and you are {deathStatusString}.</p>

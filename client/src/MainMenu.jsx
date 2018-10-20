@@ -28,7 +28,7 @@ class MainMenu extends Component{
     render(){
         return(
             <React.Fragment>
-                <h2>Main Menu</h2>
+                <h3>Main Menu</h3>
                 <button onClick={this.handleEnterGame}>Enter Game</button>
                 <button onClick={this.handleManage}>Manage Account</button>
                 <button onClick={this.handleLogout}>Log Out</button>

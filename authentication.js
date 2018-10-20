@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt")
 const saltRounds = 10;
+const pgPromise = require("pg-promise")
 
 const Authentication = class {
     constructor(db){
@@ -47,7 +48,7 @@ const Authentication = class {
     }
     deleteUser(username, callback){
         this.db.none("DELETE FROM accounts WHERE username = $1",[username]).then(
-            function(data){
+            function(){
                 callback(null)
             }
         ).catch(
@@ -69,7 +70,12 @@ const Authentication = class {
             }
         ).catch(
             function(err){
-                callback(err, null)
+                if(err.code === pgPromise.errors.queryResultErrorCode.noData){
+                    callback(null, false)
+                }
+                else{
+                    callback(err, null)
+                }
             }
         )
     }
