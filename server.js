@@ -16,7 +16,8 @@ const app = express()
 const connection = {
     host: "localhost",
     port: "5432",
-    database: "mafia_express"
+    database: "mafia_express",
+    password: "password"
 }
 const db = pgPromise(connection)
 const sessionStore = new pgSession({pgPromise: db})
