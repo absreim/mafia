@@ -68,7 +68,7 @@ GameController.GameController = class {
             case Shared.ClientMessageType.GAMESTATEREQ:
                 return this.gameStateReqHandler(sendingPlayer)
             case Shared.ClientMessageType.VOTECAST:
-                if(!("choice" in message)) {
+                if(!("choice" in message)){
                     console.log("Warning: Missing \"choice\" property in received vote cast message.")
                     return null
                 }
@@ -78,12 +78,28 @@ GameController.GameController = class {
             case Shared.ClientMessageType.ACKNOWLEDGE:
                 return this.ackHandler(sendingPlayer)
             case Shared.ClientMessageType.SUGGESTTARGET:
-                if(!("target" in message)) {
+                if(!("target" in message)){
                     console.log("Warning: missing \"target\" property in received suggest target message.")
                     return null
                 }
                 else{
                     return this.suggestHandler(sendingPlayer, message.target)
+                }
+            case Shared.ClientMessageType.CHATMESSAGE:
+                if(!("text" in message)){
+                    console.log('Warning: missing "text" property in chat message.')
+                    return null
+                }
+                else{
+                    return this.chatHandler(sendingPlayer, message.text, false)
+                }
+            case Shared.ClientMessageType.PRIVILEGEDCHATMESSAGE:
+                if(!("text" in message)){
+                    console.log('Warning: missing "text" property in privileged chat message.')
+                    return null
+                }
+                else{
+                    return this.chatHandler(sendingPlayer, message.text, true)
                 }
             default:
                 console.log(`Warning: Unknown message type received: \"${message.type}\".`)
@@ -351,15 +367,32 @@ GameController.GameController = class {
             console.log(`Warning: suggested target player "${target}" does not exist in game.`)
         }
     }
-    /* Placeholder. Move this code to the function that initlializes the set of players. */
-    livingPlayers(){
-        const livingPlayers = new Set()
-        for (let i in this.gameState.players){
-            if(this.gameState.players[i].isAlive){
-                this.livingPlayers.add(i)
+    chatHandler(sendPlayer, text, isPrivileged){
+        if(typeof text === "string"){
+            let recipients = null
+            let type = null
+            if(isPrivileged){
+                recipients = Object.keys(this.gameState.players).filter(
+                    player => this.gameState.players[player].isWerewolf
+                )
+                type = Shared.ServerMessageType.PRIVILEGEDCHATMESSAGE
             }
+            else{
+                recipients = Object.keys(this.gameState.players)
+                type = Shared.ServerMessageType.CHATMESSAGE
+            }
+            const payload = 
+                {
+                    type: type,
+                    playerName: sendPlayer,
+                    text: text,
+                    timeStamp: Date.now()
+                }
+            return [new GameController.GameControllerMessage(recipients, payload)]
         }
-        return livingPlayers
+        else{
+            console.log("Warning: invalid text field found in chat message.")
+        }
     }
     livingWerewolves(){
         return Object.keys(this.gameState.players).filter(

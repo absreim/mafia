@@ -33,7 +33,9 @@ class GameContent extends Component{
             lobbyUpdatesSubscribed: false, // protects against an unlikely race condition
             gameName: null,
             isLobbyGame: false,
-            message: null
+            message: null,
+            chatMessages: [],
+            privilegedChatMessages: []
         }
         this.handleMainMenu = this.handleMainMenu.bind(this)
         this.connectSocket = this.connectSocket.bind(this)
@@ -393,7 +395,8 @@ class GameContent extends Component{
             }
         }).bind(this))
         this.socket.on(Shared.ServerSocketEvent.GAMEACTION, (function(data){
-            if(this.state.phase !== GameContentPhase.AWAITINGINITIALSTATUS && this.state.phase !== GameContentPhase.PREVIOUSSTATUSPAGE){
+            if(this.state.phase !== GameContentPhase.AWAITINGINITIALSTATUS && 
+                this.state.phase !== GameContentPhase.PREVIOUSSTATUSPAGE){
                 if(data && data.type){
                     switch(data.type){
                         case Shared.ServerMessageType.VOTECAST:
@@ -442,6 +445,32 @@ class GameContent extends Component{
                                 })
                             }
                             break
+                        case Shared.ServerMessageType.CHATMESSAGE:
+                            if(data.playerName && data.text && data.timeStamp){
+                                const newChatMessageObj = {
+                                    playerName: data.playerName,
+                                    text: data.text,
+                                    timeStamp: data.timeStamp
+                                }
+                                const newChatMessages = this.state.chatMessages.concat(newChatMessageObj)
+                                this.setState({chatMessages: newChatMessages})
+                            }
+                            else{
+                                console.log("Warning: received malformed chat message.")
+                            }
+                        case Shared.ServerMessageType.PRIVILEGEDCHATMESSAGE:
+                            if(data.playerName && data.text && data.timeStamp){
+                                const newChatMessageObj = {
+                                    playerName: data.playerName,
+                                    text: data.text,
+                                    timeStamp: data.timeStamp
+                                }
+                                const newChatMessages = this.state.chatMessages.concat(newChatMessageObj)
+                                this.setState({privilegedChatMessages: newChatMessages})
+                            }
+                            else{
+                                console.log("Warning: received malformed privileged chat message.")
+                            }
                         default:
                             console.log("Warning: GAMEACTION message received with unrecognized type.")
                     }

@@ -38,13 +38,17 @@ Shared.ClientMessageType = {
     GAMESTATEREQ: "gameStateReq",
     SUGGESTTARGET: "suggestTarget",
     VOTECAST: "voteCast",
-    ACKNOWLEDGE: "acknowledge" // acknowledge results of end of day and end of night
+    ACKNOWLEDGE: "acknowledge", // acknowledge results of end of day and end of night
+    CHATMESSAGE: "chatMessage",
+    PRIVILEGEDCHATMESSAGE: "privilegedChatMessage"
 }
 
 Shared.ServerMessageType = {
     GAMESTATEINFO: "gameStateInfo",
     ACKNOWLEDGEMENT: "acknowledgement",
-    VOTECAST: "voteCast"
+    VOTECAST: "voteCast",
+    CHATMESSAGE: "chatMessage",
+    PRIVILEGEDCHATMESSAGE: "privilegedChatMessage"
 }
 
 Shared.PlayerDetails = class {
