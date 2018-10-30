@@ -46,6 +46,8 @@ class GameContent extends Component{
         this.createGame = this.createGame.bind(this)
         this.sendGameMessage = this.sendGameMessage.bind(this)
         this.navigateLobbyFromCreate = this.navigateLobbyFromCreate.bind(this)
+        this.sendStartedGameChatMessage = this.sendStartedGameChatMessage.bind(this)
+        this.sendPrivilegedGameChatMessage =this.sendPrivilegedGameChatMessage.bind(this)
         this.socket = io({
             autoConnect: false,
             reconnection: false
@@ -320,7 +322,9 @@ class GameContent extends Component{
                         phase: GameContentPhase.INLOBBYGAME,
                         isLobbyGame: true,
                         lobbyGameState: data.gameState,
-                        gameName: data.gameName
+                        gameName: data.gameName,
+                        chatMessages: [],
+                        privilegedChatMessages: []
                     })
                     break
                 case Shared.JoinGameOutcome.ALREADYINGAME:
@@ -458,6 +462,7 @@ class GameContent extends Component{
                             else{
                                 console.log("Warning: received malformed chat message.")
                             }
+                            break
                         case Shared.ServerMessageType.PRIVILEGEDCHATMESSAGE:
                             if(data.playerName && data.text && data.timeStamp){
                                 const newChatMessageObj = {
@@ -465,12 +470,13 @@ class GameContent extends Component{
                                     text: data.text,
                                     timeStamp: data.timeStamp
                                 }
-                                const newChatMessages = this.state.chatMessages.concat(newChatMessageObj)
+                                const newChatMessages = this.state.privilegedChatMessages.concat(newChatMessageObj)
                                 this.setState({privilegedChatMessages: newChatMessages})
                             }
                             else{
                                 console.log("Warning: received malformed privileged chat message.")
                             }
+                            break
                         default:
                             console.log("Warning: GAMEACTION message received with unrecognized type.")
                     }
@@ -549,6 +555,18 @@ class GameContent extends Component{
     }
     sendGameMessage(message){
         this.socket.emit(Shared.ClientSocketEvent.GAMEACTION, message)
+    }
+    sendStartedGameChatMessage(text){
+        this.socket.emit(Shared.ClientSocketEvent.GAMEACTION, {
+            type: Shared.ClientMessageType.CHATMESSAGE,
+            text: text
+        })
+    }
+    sendPrivilegedGameChatMessage(text){
+        this.socket.emit(Shared.ClientSocketEvent.GAMEACTION, {
+            type: Shared.ClientMessageType.PRIVILEGEDCHATMESSAGE,
+            text: text
+        })
     }
     cloneGameState(gameState){
         if(gameState){
@@ -666,7 +684,11 @@ class GameContent extends Component{
                     </div>
                 break
             case GameContentPhase.INGAME:
-                content = <InGame gameState={this.state.gameState} sendMessage={this.sendGameMessage} username={this.props.username} />
+                content = <InGame gameState={this.state.gameState} sendMessage={this.sendGameMessage} 
+                    username={this.props.username} sendChatMessage={this.sendStartedGameChatMessage}
+                    sendPrivilegedChatMessage={this.sendPrivilegedGameChatMessage}
+                    chatMessages={this.state.chatMessages} 
+                    privilegedChatMessages={this.state.privilegedChatMessages} />
                 break
             default:
                 content =

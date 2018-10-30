@@ -1,0 +1,26 @@
+.chat-log {
+    padding: 0;
+    list-style-type: none;
+    overflow-y: scroll;
+    height: 10em;
+    width: 40ch;
+    border: 1px solid;
+}
+
+.chat-log__username {
+    font-weight: bold;
+}
+
+.chat-log__placeholder-text {
+    color: gray;
+}
+
+.chat-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-log__form {
+    display: flex;
+    flex-direction: row;
+}

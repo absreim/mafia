@@ -7,6 +7,7 @@ message
 */
 
 import React, {Component} from "react"
+import "./InGameChat.css"
 
 class InGameChat extends Component {
     constructor(props){
@@ -14,6 +15,8 @@ class InGameChat extends Component {
         this.state = {
             inputBoxText: ""
         }
+        this.handleSubmit = this.handleSubmit.bind(this)
+        this.handleTextInputChange = this.handleTextInputChange.bind(this)
     }
     handleSubmit(event){
         event.preventDefault()
@@ -22,30 +25,45 @@ class InGameChat extends Component {
             inputBoxText: ""
         })
     }
+    handleTextInputChange(event){
+        this.setState({inputBoxText: event.target.value})
+    }
+    componentDidUpdate(prevProps){
+        if(prevProps.chatMessages !== this.props.chatMessages){
+            this.ulElementRef.current.lastChild.scrollIntoView(false)
+        }
+    }
     render(){
-        let receivedMessagesArea = null
+        let chatMessageListItems = null
         if(!this.props.chatMessages || this.props.chatMessages.length === 0){
-            receivedMessagesArea = <ul><li>No one has said anything yet. 
-                Start the conversation yourself!</li></ul>
+            chatMessageListItems = <li className="chat-log__placeholder-text">No one has said anything yet.
+            &nbsp;Start the conversation yourself!</li>
         }
         else{
-            const chatMessageList = this.props.chatMessages.map((messageObj, index) => {
+            chatMessageListItems = this.props.chatMessages.map((messageObj, index) => {
                 if(messageObj.playerName && messageObj.text && messageObj.timeStamp){
-                    const dateStr = (new Date(messageObj.timeStamp)).toLocaleDateString()
-                    return <li key={index}>({dateStr}) <em>{messageObj.playerName}:</em> 
+                    const dateStr = (new Date(messageObj.timeStamp)).toLocaleTimeString()
+                    return <li key={index}>({dateStr})&nbsp;
+                        <span className="chat-log__username">{messageObj.playerName}: </span>
                         {messageObj.text}</li>
                 }
+                else{
+                    return null
+                }
             })
-            receivedMessagesArea = <ul>{chatMessageList}</ul>
         }
+        const receivedMessagesArea = <ul className="chat-log">
+            {chatMessageListItems}</ul>
         return(
-            <div>
+            <div className="chat-container">
                 {receivedMessagesArea}
-                <form onSubmit={this.handleSubmit}>
-                    <input type="text" value={this.state.inputBoxText} />
+                <form onSubmit={this.handleSubmit} className={"chat-log__form"}>
+                    <input type="text" value={this.state.inputBoxText} onChange={this.handleTextInputChange} />
                     <input type="submit" value="Send" />
                 </form>
             </div>
         )
     }
 }
+
+export default InGameChat

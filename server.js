@@ -16,8 +16,7 @@ const app = express()
 const connection = {
     host: "localhost",
     port: "5432",
-    database: "mafia_express",
-    password: "password"
+    database: "mafia_express"
 }
 const db = pgPromise(connection)
 const sessionStore = new pgSession({pgPromise: db})
@@ -28,7 +27,7 @@ const session = expressSession({
     store: sessionStore,
     resave: false,
     saveUninitialized: false,
-    cookie: {domain: "localhost"}
+    cookie: {domain: "192.168.1.3"}
  })
 
 app.use(session)
@@ -265,9 +264,6 @@ function processGameControllerResponses(responses){
                 let recipientSocket = userToSocketMap[recipient]
                 if(recipientSocket){
                     recipientSocket.emit(Shared.ServerSocketEvent.GAMEACTION, response.payload)
-                }
-                else{
-                    console.log(`Warning: tried to send game action message to user "${recipient}", but that user does not have an associated socket.`)
                 }
             }
         }

@@ -55,17 +55,20 @@ class AccountMenu extends Component{
         let arrowImg = null
         if(this.state.menuVisible){
             dropdownClass += " dropdown__expanded"
-            arrowImg = <img src={trayArrowDown} alt="Down arrow indicating an expanded dropdown menu." />
+            arrowImg = <img src={trayArrowDown} alt="Down arrow indicating an expanded dropdown menu." 
+                className="account-menu__dropdown-arrow" />
         }
         else{
             dropdownClass += " dropdown__collapsed"
-            arrowImg = <img src={trayArrowRight} alt="Right arrow indicating a collapsed dropdown menu." />
+            arrowImg = <img src={trayArrowRight} alt="Right arrow indicating a collapsed dropdown menu." 
+                className="account-menu__dropdown-arrow" />
         }
         if(this.props.loginStatus === Shared.LoginStatus.LOGGEDIN && this.props.username){
             return (
                 <React.Fragment>
                     <div onClick={this.toggleMenu} className="icon-username-box">
-                        <img src={filledPersonSvg} alt="Filled wireframe person icon." />
+                        <img src={filledPersonSvg} alt="Filled wireframe person icon." 
+                            className="account-menu__person-icon" />
                         <a>{this.props.username}</a>
                         {arrowImg}
                     </div>
@@ -81,7 +84,8 @@ class AccountMenu extends Component{
             return(
                 <React.Fragment>
                     <div onClick={this.toggleMenu} className="icon-username-box">
-                        <img src={hollowPersonSvg} alt="Hollow wireframe person icon." />
+                        <img src={hollowPersonSvg} alt="Hollow wireframe person icon." 
+                            className="account-menu__person-icon" />
                         <a>Not Logged In</a>
                         {arrowImg}
                     </div>

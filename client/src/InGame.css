@@ -1,0 +1,10 @@
+.ingame-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-right: 2%;
+}
+
+.chat-title {
+    margin-bottom: 0px;
+}

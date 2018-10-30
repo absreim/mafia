@@ -33,7 +33,13 @@
     background-color: lightgray;
 }
 
-img {
+.account-menu__person-icon {
+    width: 32px;
+    height: 32px;
+    vertical-align: middle;
+}
+
+.account-menu__dropdown-arrow {
     width: 32px;
     height: 32px;
     vertical-align: middle;
