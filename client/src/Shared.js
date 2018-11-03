@@ -143,7 +143,9 @@ Shared.ServerSocketEvent = {
     GAMESTARTED: "gameStarted", // sent when the last player joins a lobby game and the game controller is created
     // clients must request initial status update via GAMEACTION message
     GAMEENDED: "gameEnded", // clients are notified of the start to a game via GAMEACTION messages
-    REMOVEDFROMGAME: "removedFromGame" // removed from game due to exceptional circumstances
+    REMOVEDFROMGAME: "removedFromGame", // removed from game due to exceptional circumstances
+    LOBBYGAMECHATMESSAGE: "lobbyGameChatMessage",
+    LOBBYGAMESTATEUPDATE: "lobbyGameStateUpdate"
 }
 
 Shared.ClientSocketEvent = {
@@ -156,7 +158,8 @@ Shared.ClientSocketEvent = {
     UNSUBSCRIBELOBBYUPDATES: "unsubscribeLobbyUpdates",
     JOINGAME: "joinGame",
     CREATEGAME: "createGame",
-    LEAVEGAME: "leaveGame" // leave game in lobby, before it has started. Currenlty no way to leave started games.
+    LEAVEGAME: "leaveGame", // leave game in lobby before it has started. Currenlty no way to leave started games.
+    LOBBYGAMECHATMESSAGE: "lobbyGameChatMessage"
 }
 
 Shared.StatusType = {

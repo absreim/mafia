@@ -27,7 +27,7 @@ const session = expressSession({
     store: sessionStore,
     resave: false,
     saveUninitialized: false,
-    cookie: {domain: "192.168.1.3"}
+    cookie: {domain: "localhost"}
  })
 
 app.use(session)
@@ -427,7 +427,10 @@ io.on("connection", function(socket){
                     const serializedGameState = currentGame.serialize()
                     for(let player of currentGame.players){
                         if(userToSocketMap[player] && player != username){
-                            userToSocketMap[player].emit(Shared.ServerSocketEvent.LOBBYGAMESTATE, serializedGameState)
+                            userToSocketMap[player].emit(Shared.ServerSocketEvent.LOBBYGAMESTATEUPDATE, {
+                                gameName: data.name,
+                                gameState: serializedGameState
+                            })
                         }
                     }
                     socket.emit(Shared.ServerSocketEvent.JOINGAMEOUTCOME, {
@@ -495,7 +498,10 @@ io.on("connection", function(socket){
                     const serializedGameState = currentGame.serialize()
                     for(let player of currentGame.players){
                         if(userToSocketMap[player]){
-                            userToSocketMap[player].emit(Shared.ServerSocketEvent.LOBBYGAMESTATE, serializedGameState)
+                            userToSocketMap[player].emit(Shared.ServerSocketEvent.LOBBYGAMESTATEUPDATE, {
+                                gameName: data.name,
+                                gameState: serializedGameState
+                            })
                         }
                     }
                     io.to(LOBBYUPDATESROOM).emit(Shared.ServerSocketEvent.LOBBYUPDATE, {
@@ -535,6 +541,34 @@ io.on("connection", function(socket){
                 socket.emit(Shared.LobbyGameStateRequestOutcome, {
                     type: Shared.LobbyGameStateRequestOutcome.NOTINLOBBYGAME
                 })
+            }
+        })
+        socket.on(Shared.ClientSocketEvent.LOBBYGAMECHATMESSAGE, function(data){
+            if(data && data.text){
+                if(username in userToGameMap){
+                    const usersGameName = userToGameMap[username]
+                    if(usersGameName in lobbyGames){
+                        const usersGame = lobbyGames[usersGameName]
+                        for(let player of usersGame.players){
+                            const playerSocket = userToSocketMap[player]
+                            if(playerSocket){
+                                const currentTimeStamp = Date.now()
+                                playerSocket.emit(Shared.ServerSocketEvent.LOBBYGAMECHATMESSAGE, {
+                                    playerName: username,
+                                    text: data.text,
+                                    timeStamp: currentTimeStamp
+                                })
+                            }
+                        }
+                    }
+                    else{
+                        console.log("Warning: lobby game chat message " + 
+                            "received by player not in a lobby game.")
+                    }
+                }
+            }
+            else{
+                console.log("Warning: received malformed lobby game chat message.")
             }
         })
     }

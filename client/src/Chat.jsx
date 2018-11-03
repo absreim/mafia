@@ -1,5 +1,5 @@
 /*
-In game chat box component.
+Chat interface component.
 Required props:
 chatMessages - array of chat message objects
 sendMessage(text) - function to send non-privileged
@@ -7,9 +7,9 @@ message
 */
 
 import React, {Component} from "react"
-import "./InGameChat.css"
+import "./Chat.css"
 
-class InGameChat extends Component {
+class Chat extends Component {
     constructor(props){
         super(props)
         this.state = {
@@ -17,6 +17,7 @@ class InGameChat extends Component {
         }
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleTextInputChange = this.handleTextInputChange.bind(this)
+        this.ulElementRef = React.createRef()
     }
     handleSubmit(event){
         event.preventDefault()
@@ -52,7 +53,7 @@ class InGameChat extends Component {
                 }
             })
         }
-        const receivedMessagesArea = <ul className="chat-log">
+        const receivedMessagesArea = <ul className="chat-log" ref={this.ulElementRef}>
             {chatMessageListItems}</ul>
         return(
             <div className="chat-container">
@@ -66,4 +67,4 @@ class InGameChat extends Component {
     }
 }
 
-export default InGameChat
+export default Chat

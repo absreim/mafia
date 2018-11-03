@@ -1,0 +1,10 @@
+.lobby-game__root-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-right: 2%;
+}
+
+.lobby-game__chat-title {
+    margin-bottom: 0px;
+}

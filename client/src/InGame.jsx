@@ -25,7 +25,7 @@ import InGameNighttime from "./InGameNighttime"
 import InGameNighttimeVoting from "./InGameNighttimeVoting"
 import InGameNighttimeSummary from "./InGameNighttimeSummary"
 import InGameOver from "./InGameOver"
-import InGameChat from "./InGameChat"
+import Chat from "./Chat"
 import "./InGame.css"
 
 class InGame extends Component{
@@ -121,7 +121,7 @@ class InGame extends Component{
                 let allPlayersChatArea = 
                     <React.Fragment>
                         <h4 className="chat-title">Chat Room (All Players)</h4>
-                        <InGameChat chatMessages={this.props.chatMessages} 
+                        <Chat chatMessages={this.props.chatMessages} 
                             sendMessage={this.props.sendChatMessage} />
                     </React.Fragment>
                 if(playerIsWerewolf){
@@ -129,7 +129,7 @@ class InGame extends Component{
                         <div>
                             <div>
                                 <h4 className="chat-title">Werewolf-only Chat</h4>
-                                <InGameChat chatMessages={this.props.privilegedChatMessages}
+                                <Chat chatMessages={this.props.privilegedChatMessages}
                                     sendMessage={this.props.sendPrivilegedChatMessage} />
                             </div>
                             <div>{allPlayersChatArea}</div>

@@ -48,6 +48,7 @@ class GameContent extends Component{
         this.navigateLobbyFromCreate = this.navigateLobbyFromCreate.bind(this)
         this.sendStartedGameChatMessage = this.sendStartedGameChatMessage.bind(this)
         this.sendPrivilegedGameChatMessage =this.sendPrivilegedGameChatMessage.bind(this)
+        this.sendLobbyGameChatMessage = this.sendLobbyGameChatMessage.bind(this)
         this.socket = io({
             autoConnect: false,
             reconnection: false
@@ -486,8 +487,38 @@ class GameContent extends Component{
                 }
             }
         }).bind(this))
-        this.socket.on(Shared.ServerSocketEvent.GAMEENDED, (function(data){
+        this.socket.on(Shared.ServerSocketEvent.GAMEENDED, (function(){
             this.socket.emit(Shared.ClientSocketEvent.STATUSREQUEST)
+        }).bind(this))
+        this.socket.on(Shared.ServerSocketEvent.LOBBYGAMECHATMESSAGE, (function(data){
+            if(data && data.playerName && data.text && data.timeStamp){
+                const newChatMessageObj = {
+                    playerName: data.playerName,
+                    text: data.text,
+                    timeStamp: data.timeStamp
+                }
+                const newChatMessages = this.state.chatMessages.concat(newChatMessageObj)
+                this.setState({chatMessages: newChatMessages})
+            }
+            else{
+                console.log("Warning: received malformed lobby game chat message.")
+            }
+        }).bind(this))
+        this.socket.on(Shared.ServerSocketEvent.LOBBYGAMESTATEUPDATE, (function(data){
+            if(data && data.gameName && data.gameState){
+                if(this.state.phase !== GameContentPhase.INLOBBYGAME){
+                    console.log("Warning: received game state update message when client " + 
+                        "was not aware that it was in a lobby game.")
+                }
+                this.setState({
+                    phase: GameContentPhase.INLOBBYGAME,
+                    gameName: data.gameName,
+                    lobbyGameState: data.gameState
+                })
+            }
+            else{
+                console.log("Warning: received malformed lobby game update message.")
+            }
         }).bind(this))
     }
     componentDidMount(){
@@ -565,6 +596,11 @@ class GameContent extends Component{
     sendPrivilegedGameChatMessage(text){
         this.socket.emit(Shared.ClientSocketEvent.GAMEACTION, {
             type: Shared.ClientMessageType.PRIVILEGEDCHATMESSAGE,
+            text: text
+        })
+    }
+    sendLobbyGameChatMessage(text){
+        this.socket.emit(Shared.ClientSocketEvent.LOBBYGAMECHATMESSAGE, {
             text: text
         })
     }
@@ -671,7 +707,10 @@ class GameContent extends Component{
                 content = <CreateGame navigateLobby={this.navigateLobbyFromCreate} createGame={this.createGame} />
                 break
             case GameContentPhase.INLOBBYGAME:
-                content = <LobbyGameWaiting gameName={this.state.gameName} gameState={this.state.lobbyGameState} leaveGame={this.leaveGame} />
+                content = <LobbyGameWaiting gameName={this.state.gameName} 
+                    gameState={this.state.lobbyGameState} leaveGame={this.leaveGame}
+                    sendChatMessage={this.sendLobbyGameChatMessage} 
+                    chatMessages={this.state.chatMessages} />
                 break
             case GameContentPhase.DISCONNECTED:
                 content =

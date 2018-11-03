@@ -367,7 +367,7 @@ GameController.GameController = class {
             console.log(`Warning: suggested target player "${target}" does not exist in game.`)
         }
     }
-    chatHandler(sendPlayer, text, isPrivileged){
+    chatHandler(sendingPlayer, text, isPrivileged){
         if(typeof text === "string"){
             let recipients = null
             let type = null
@@ -384,7 +384,7 @@ GameController.GameController = class {
             const payload = 
                 {
                     type: type,
-                    playerName: sendPlayer,
+                    playerName: sendingPlayer,
                     text: text,
                     timeStamp: Date.now()
                 }
