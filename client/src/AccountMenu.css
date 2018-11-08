@@ -13,13 +13,14 @@
     display: block;
 }
 
-.dropdown__link {
-    display: block;
+.dropdown__button {
     border: 1px solid;
-    padding: 3px;
+    background-color: white;
+    cursor: pointer;
+    font-size: large;
 }
 
-.dropdown__link:hover {
+.dropdown__button:hover {
     background-color: lightgray;
 }
 
@@ -43,4 +44,8 @@
     width: 32px;
     height: 32px;
     vertical-align: middle;
+}
+
+.account-menu__user-description {
+    display: inline;
 }

@@ -69,13 +69,13 @@ class AccountMenu extends Component{
                     <div onClick={this.toggleMenu} className="icon-username-box">
                         <img src={filledPersonSvg} alt="Filled wireframe person icon." 
                             className="account-menu__person-icon" />
-                        <a>{this.props.username}</a>
+                        <p className="account-menu__user-description">{this.props.username}</p>
                         {arrowImg}
                     </div>
                     <div className={dropdownClass}>
-                        <a onClick={this.handleLogout} className="dropdown__link">Log Out</a>
-                        <a onClick={this.handleManage} className="dropdown__link">Manage Account</a>
-                        <a onClick={this.handleCreate} className="dropdown__link">Create Account</a>
+                        <button onClick={this.handleLogout} className="dropdown__button">Log Out</button>
+                        <button onClick={this.handleManage} className="dropdown__button">Manage Account</button>
+                        <button onClick={this.handleCreate} className="dropdown__button">Create Account</button>
                     </div>
                 </React.Fragment>
             )
@@ -86,12 +86,12 @@ class AccountMenu extends Component{
                     <div onClick={this.toggleMenu} className="icon-username-box">
                         <img src={hollowPersonSvg} alt="Hollow wireframe person icon." 
                             className="account-menu__person-icon" />
-                        <a>Not Logged In</a>
+                        <p className="account-menu__user-description">Not Logged In</p>
                         {arrowImg}
                     </div>
                     <div className={dropdownClass}>
-                        <a onClick={this.handleLogin} className="dropdown__link">Log In</a>
-                        <a onClick={this.handleCreate} className="dropdown__link">Create Account</a>
+                        <button onClick={this.handleLogin} className="dropdown__button">Log In</button>
+                        <button onClick={this.handleCreate} className="dropdown__button">Create Account</button>
                     </div>
                 </React.Fragment>
             )

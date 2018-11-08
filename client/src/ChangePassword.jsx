@@ -8,7 +8,6 @@ is being made
 */
 
 import React, {Component} from "react"
-import "./ChangePassword.css"
 
 class ChangePassword extends Component{
     constructor(props){
@@ -35,8 +34,8 @@ class ChangePassword extends Component{
         return(
             <form onSubmit={this.handleSubmit}>
                 <h2>Change your password</h2>
-                <p>Enter your existing password to change the password for the account 
-                    <span className="external-info">{this.props.username}</span></p>
+                <p>Enter your existing password to change the password for the account&nbsp;
+                    <strong>{this.props.username}</strong>.</p>
                 <label htmlFor="old">Current password:</label>
                 <input id="old" type="password" value={this.state.old} onChange={this.handleOldChange} />
                 <label htmlFor="new">New password:</label>

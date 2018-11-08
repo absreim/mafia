@@ -470,9 +470,9 @@ class App extends Component {
   }
 
   render() {
-    let dismissLinkClass = "dismiss-link"
+    let dismissButtonClass = "dismiss-button"
     if(this.state.userMessage.length === 0){
-      dismissLinkClass += " dismiss-link--hidden"
+      dismissButtonClass += " dismiss-button--hidden"
     }
     return (
       <React.Fragment>
@@ -489,7 +489,8 @@ class App extends Component {
         </nav>
         <main>{this.getMainContent()}</main>
         <footer>
-          <p>{this.state.userMessage} <a onClick={this.clearMessage} className={dismissLinkClass}>Dismiss</a></p>
+          <p className={"main-component__user-message-paragraph"}>{this.state.userMessage}</p>
+          <button onClick={this.clearMessage} className={dismissButtonClass}>Dismiss</button>
         </footer>
       </React.Fragment>
     )

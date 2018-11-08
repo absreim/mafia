@@ -27,11 +27,14 @@ nav {
   border: 1px dashed;
 }
 
-.dismiss-link {
-  cursor: pointer;
-  color: blue;
+.dismiss-button {
+  display: inline;
 }
 
-.dismiss-link--hidden {
+.dismiss-button--hidden {
   display: none;
+}
+
+.main-component__user-message-paragraph {
+  display: inline;
 }
