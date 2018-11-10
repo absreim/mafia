@@ -1,8 +1,9 @@
 .dropdown {
     z-index: 1;
     position: absolute;
-    background-color: white;
+    background-color: darkblue;
     cursor: pointer;
+    border: 1px solid;
 }
 
 .dropdown__collapsed {
@@ -14,29 +15,31 @@
 }
 
 .dropdown__button {
-    border: 1px solid;
+    border-top: 1px solid;
+    border-bottom: 1px solid;
     background-color: white;
     cursor: pointer;
     font-size: large;
+    width: 100%;
 }
 
 .dropdown__button:hover {
-    background-color: lightgray;
+    background-color: lightgrey;
 }
 
 .icon-username-box {
     cursor: pointer;
     border: 1px solid;
     padding: 5px;
+    color: rgba(255, 255, 255, 0.9);
 }
 
 .icon-username-box:hover {
-    background-color: lightgray;
+    color: rgba(255, 255, 255, 1);
+    background-color: rgb(0, 0, 175);
 }
 
 .account-menu__person-icon {
-    width: 32px;
-    height: 32px;
     vertical-align: middle;
 }
 
@@ -48,4 +51,23 @@
 
 .account-menu__user-description {
     display: inline;
+}
+
+.person-icon__circle {
+    stroke: white;
+    stroke-width: 2;
+}
+
+.person-icon__circle--filled {
+    fill: white;
+}
+
+.person-icon__circle--hollow {
+    fill: none;
+}
+
+.dropdown-arrow__path {
+    stroke: white;
+    stroke-width: 0.5;
+    fill: white;
 }

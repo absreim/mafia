@@ -81,16 +81,20 @@ class CreateGame extends Component{
         }
         return(
             <form onSubmit={this.handleSubmit}>
-                <h2>Create a New Game</h2>
+                <h3>Create a New Game</h3>
                 <p>All fields must be filled.</p>
                 <label htmlFor="name">Name</label>
                 <input id="name" type="text" value={this.state.name} onChange={this.handleNameChange} />
                 <label htmlFor="numPlayers">Number of Players (minimum 4)</label>
-                <input id="numPlayers" type="number" value={this.state.numPlayers} onChange={this.handleNumPlayersChange} />
+                <input id="numPlayers" type="number" value={this.state.numPlayers} 
+                    onChange={this.handleNumPlayersChange} />
                 <label htmlFor="numWerewolves">Number of Werewolves{this.getWerewolfHelpText()}</label>
-                <input id="numWerewolves" type="number" value={this.state.numWerewolves} onChange={this.handleNumWerewolvesChange} />
-                <button type="button" onClick={this.handleLobby}>Return to Lobby</button>
-                <button type="submit" disabled={!this.areFormsFilled()}>Create</button>
+                <input id="numWerewolves" type="number" value={this.state.numWerewolves} 
+                    onChange={this.handleNumWerewolvesChange} />
+                <div className="create-game__button-container">
+                    <button type="button" onClick={this.handleLobby}>Return to Lobby</button>
+                    <button type="submit" disabled={!this.areFormsFilled()}>Create</button>
+                </div>
                 {errorMessage}
             </form>
         )

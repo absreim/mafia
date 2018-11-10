@@ -32,7 +32,7 @@ class AccountLogin extends Component{
     render(){
         return(
             <form onSubmit={this.handleSubmit}>
-                <h2>Enter your credentials to log in</h2>
+                <h3>Enter your credentials to log in</h3>
                 <label htmlFor="username">Username:</label>
                 <input type="text" id="username" value={this.state.username} onChange={this.handleUsernameChange} />
                 <label htmlFor="password">Password:</label>

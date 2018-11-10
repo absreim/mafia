@@ -109,7 +109,7 @@ class Lobby extends Component{
                     <tbody>{lobbyGameRows}</tbody>
                 </table>
                 {playersInGameArea}
-                <div className="button-container">
+                <div className="lobby__button-container">
                     <button onClick={this.handleJoin} disabled={!this.state.selectedGame}>Join Game</button>
                     <button onClick={this.handleCreate}>Create New Game</button>
                 </div>

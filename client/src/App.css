@@ -1,4 +1,22 @@
 nav {
+  background-color: darkblue;
+}
+
+header {
+  background-color: darkblue;
+}
+
+h2 {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.main-title {
+  margin: 0;
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
+.nav-container {
   display: table;
 }
 
@@ -12,15 +30,15 @@ nav {
   margin-right: 3px;
   vertical-align: middle;
   cursor: pointer;
-  color: blue;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .nav-link:active {
-  color: red;
+  color: rgba(255, 255, 255, 1);
 }
 
-.nav-link:visited {
-  color: purple;
+.nav-link:hover {
+  color: rgba(255, 255, 255, 1);
 }
 
 .nav-link:focus {

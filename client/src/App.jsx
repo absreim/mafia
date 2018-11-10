@@ -477,15 +477,17 @@ class App extends Component {
     return (
       <React.Fragment>
         <header>
-          <h2>Absreim's Mafia React Client</h2>
+            <h2 className="main-title">Absreim's Mafia</h2>
         </header>
         <nav>
-          <div>
-            <AccountMenu username={this.state.username} loginStatus={this.state.loginStatus} 
-            handleLogin={this.navigateLogin} handleLogout={this.logout} 
-            handleManage={this.navigateManage} handleCreate={this.navigateCreate} />
+          <div className="nav-container">
+            <div>
+              <AccountMenu username={this.state.username} loginStatus={this.state.loginStatus} 
+                handleLogin={this.navigateLogin} handleLogout={this.logout} 
+                handleManage={this.navigateManage} handleCreate={this.navigateCreate} />
+            </div>
+            <div className="nav-links-container">{this.getNavLinks()}</div>
           </div>
-          <div className="nav-links-container">{this.getNavLinks()}</div>
         </nav>
         <main>{this.getMainContent()}</main>
         <footer>

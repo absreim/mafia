@@ -8,8 +8,7 @@
     background-color: black;
 }
 
-.button-container {
-    margin-top: 10px;
+.lobby__button-container {
     display: flex;
     flex-direction: row;
 }
