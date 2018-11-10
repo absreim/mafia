@@ -39,13 +39,11 @@
     background-color: rgb(0, 0, 175);
 }
 
-.account-menu__person-icon {
+.person-icon {
     vertical-align: middle;
 }
 
-.account-menu__dropdown-arrow {
-    width: 32px;
-    height: 32px;
+.dropdown-arrow {
     vertical-align: middle;
 }
 

@@ -14,10 +14,6 @@ not logged in
 import React, {Component} from "react"
 import "./AccountMenu.css"
 import Shared from "./Shared.js"
-import filledPersonSvg from "./person_filled.svg"
-import hollowPersonSvg from "./person_hollow.svg"
-import trayArrowRight from "./tray_arrow_right.svg"
-import trayArrowDown from "./tray_arrow_down.svg"
 
 class AccountMenu extends Component{
     constructor(props){
@@ -64,7 +60,8 @@ class AccountMenu extends Component{
         const arrowImg = <svg
                 width="32"
                 height="32"
-                viewBox="0 0 8.4666665 8.4666669">
+                viewBox="0 0 8.4666665 8.4666669"
+                className="dropdown-arrow">
                     <g id="layer1" transform="translate(0,-288.53333)">
                         <path
                             id="path3727"
@@ -79,7 +76,7 @@ class AccountMenu extends Component{
                 width="32"
                 height="32"
                 viewBox="0 0 33.866666 33.866666"
-                color="white">
+                className="person-icon">
                 <g transform="translate(0,-263.13334)">
                     <circle
                         cx="16.933332"
@@ -114,7 +111,7 @@ class AccountMenu extends Component{
                 width="32"
                 height="32"
                 viewBox="0 0 33.866666 33.866666"
-                color="white">
+                className="person-icon">
                 <g transform="translate(0,-263.13334)">
                     <circle
                         cx="16.933332"
