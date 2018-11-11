@@ -2,16 +2,8 @@ const GameController = require("./game-controller.js")
 const Shared = require("./shared.js")
 const CommonAlgos = require("./common-algos.js")
 
-const totalPlayers = 4
-const numWerewolves = 2
-const gc = new GameController.GameController(totalPlayers, numWerewolves)
-
-beforeAll(() => {
-    gc.joinPlayer("Alice")
-    gc.joinPlayer("Bob")
-    gc.joinPlayer("Cory")
-    gc.joinPlayer("David")
-})
+const numWerewolves = 1
+const gc = new GameController.GameController(["Alice", "Bob", "Cory", "David"], numWerewolves, null)
 
 test("Alice, Bob, Cory, and David should be in the game.", () => {
     const playerNames = Object.keys(gc.gameState.players)
@@ -20,14 +12,6 @@ test("Alice, Bob, Cory, and David should be in the game.", () => {
     expect(playerNames).toContain("Cory")
     expect(playerNames).toContain("David")
 })
-
-test("Number of werewolves should be automatically scaled down to 1.", () => {
-    const claimedNumWerewolves = gc.numWerewolves
-    const actualNumWerewolves = Object.keys(gc.gameState.players).filter(
-        player => gc.gameState.players[player].isWerewolf).length
-    expect(claimedNumWerewolves).toEqual(1)
-    expect(actualNumWerewolves).toEqual(1)
-    })
 
 test("Game should be in STARTED phase.", () => {
         const phase = gc.gameState.phase
@@ -91,7 +75,7 @@ describe("After all players acknowledged STARTED phase.", () => {
             })
             describe("Players acknowledge results.", () => {
                 beforeAll(() => {
-                    for(player of gc.livingPlayersCache){
+                    for(player of Object.keys(gc.gameState.players)){
                         gc.handleMessage({type: Shared.ClientMessageType.ACKNOWLEDGE}, player)
                     }
                 })
@@ -139,7 +123,7 @@ describe("After all players acknowledged STARTED phase.", () => {
                         })
                         describe("Players acknowledge results. Werewolf suggests villager.", () => {
                             beforeAll(() => {
-                                for(player of gc.livingPlayersCache){
+                                for(player of Object.keys(gc.gameState.players)){
                                     gc.handleMessage({type: Shared.ClientMessageType.ACKNOWLEDGE}, player)
                                 }
                                 const theWerewolf = Object.keys(gc.gameState.players).filter(

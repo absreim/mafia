@@ -1,13 +1,9 @@
 const Authentication = require("./authentication.js")
 const pgp = require("pg-promise")()
 
-const connection = {
-    host: "localhost",
-    port: "5432",
-    database: "mafia_first_pass",
-    user: "mafia_server",
-    password: "password"
-}
+const settings = require("./settings.json")
+
+const connection = settings.db_connection_params
 
 const db = pgp(connection)
 const auth = new Authentication(db)
@@ -61,6 +57,8 @@ describe("After user Alice created and confirmed to authenticate.", () => {
 
 afterAll(done => {
     function callback(err){
+        expect(err).toEqual(null)
+        pgp.end()
         done()
     }
     auth.deleteUser("Alice", callback)

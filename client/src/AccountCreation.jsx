@@ -40,7 +40,7 @@ class AccountCreation extends Component {
     render(){
         return(
             <form onSubmit={this.handleSubmit}>
-                <h2>Create a new account</h2>
+                <h3>Create a new account</h3>
                 <label htmlFor="username">Username:</label>
                 <input className="login-form__text-input" type="text" id="username" 
                     value={this.state.username} onChange={this.handleUsernameChange} />

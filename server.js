@@ -8,26 +8,23 @@ const sharedSession = require("express-socket.io-session")
 const socketIo = require("socket.io")
 
 const Shared = require("./shared.js")
+const settings = require("./settings.json")
 const Authentication = require("./authentication.js")
 const GameController =  require("./game-controller.js")
 
 const app = express()
 
-const connection = {
-    host: "localhost",
-    port: "5432",
-    database: "mafia_express"
-}
+const connection = settings.db_connection_params
 const db = pgPromise(connection)
 const sessionStore = new pgSession({pgPromise: db})
 const auth = new Authentication(db)
 
 const session = expressSession({
-    secret: "secret",
+    secret: settings.dev_secret,
     store: sessionStore,
     resave: false,
     saveUninitialized: false,
-    cookie: {domain: "localhost"}
+    cookie: {domain: settings.cookie_domain}
  })
 
 app.use(session)
@@ -579,4 +576,4 @@ io.on("connection", function(socket){
     }
 })
 
-server.listen(3001, () => console.log('Mafia server listening on port 3001!'))
+server.listen(settings.port, () => console.log(`Mafia server listening on port ${settings.port}!`))

@@ -1,5 +1,5 @@
 /* Shared constants and classes between client and server. 
-This file is not intended to be used as is on the client side. 
+This file is not intended to be used as is on the server side. 
 Organizing the module this way is merely meant to make the 
 structure of the app easier to understand. */
 
