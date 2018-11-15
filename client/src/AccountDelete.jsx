@@ -25,7 +25,7 @@ class AccountDelete extends Component{
     render(){
         return(
             <form onSubmit={this.handleSubmit}>
-                <h2>Confirm account deletion</h2>
+                <h3>Confirm account deletion</h3>
                 <p>Enter your password one last to time to delete your account&nbsp;
                     <span className="external-info">{this.props.username}</span></p>
                 <label htmlFor="password">Password:</label>

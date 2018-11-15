@@ -6,5 +6,6 @@
     },
     "cookie_domain": "localhost",
     "dev_secret": "secret",
-    "port": 3001
+    "dev_port": 3001,
+    "prod_port": 3000
 }

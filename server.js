@@ -31,11 +31,11 @@ const session = expressSession({
     cookie: {domain: settings.cookie_domain}
  })
 
+// winston logging
 const myFormat = winston.format.printf(logEntryObj => {
     return `${logEntryObj.timestamp} ${logEntryObj.level}: ${logEntryObj.message}`;
 })
 const combinedFormat = winston.format.combine(winston.format.timestamp(), myFormat)
-
 const logger = winston.createLogger({
     level: 'info',
     format: combinedFormat,
@@ -43,11 +43,6 @@ const logger = winston.createLogger({
         new winston.transports.File({ filename: 'combined.log' })
     ]
 })
-
-//
-// If we're not in production then log to the `console` with the format:
-// `${info.level}: ${info.message} JSON.stringify({ ...rest }) `
-// 
 if (!isProduction) {
     logger.add(new winston.transports.Console({
         format: combinedFormat
@@ -55,9 +50,12 @@ if (!isProduction) {
 }
 
 app.use(session)
-
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
+
+if(isProduction){
+    app.set("trust proxy", true)
+}
 
 app.post("/api/login", function(req, res){
     if(req.session){
@@ -248,8 +246,14 @@ app.get("/api/loginstatus", function(req, res){
 
 const server = http.Server(app)
 const io = socketIo(server)
-
 io.use(sharedSession(session))
+
+if(isProduction){
+    app.use(express.static("client/build"))
+    app.all("*", (req, res) => {
+        res.redirect("index.html")
+    })
+}
 
 const LOBBYUPDATESROOM = "lobbyUpdates"
 
@@ -609,4 +613,5 @@ io.on("connection", function(socket){
     }
 })
 
-server.listen(settings.port, () => logger.info(`Mafia server listening on port ${settings.port}!`))
+const port = isProduction ? settings.prod_port : settings.dev_port
+server.listen(port, () => logger.info(`Mafia server listening on port ${port}!`))
