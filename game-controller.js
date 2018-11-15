@@ -31,7 +31,9 @@ GameController.GameState = class {
 GameController.GameController = class {
     /* numWerewolves should be less than half of total players.
     Minimum totalPlayers in a game is 4. */
-    constructor(players, numWerewolves, gameEndCallback){
+    // loggingFunction of the form function(level, text), where
+    // level = "info", "warn", "error"
+    constructor(players, numWerewolves, gameEndCallback, loggingFunction){
         if(players.size < 4){
             throw new RangeError("Total players in a game must be at least 4.")
         }
@@ -44,6 +46,14 @@ GameController.GameController = class {
         }
         this.numWerewolves = numWerewolves
         this.gameEndCallback = gameEndCallback
+        if(loggingFunction){
+            this.loggingFunction = loggingFunction
+        }
+        else{
+            this.loggingFunction = (level, text) => {
+                console.log(`level: ${level} text: ${text}`)
+            }
+        }
         this.livingPlayersCache = null // Set of all players still alive
         const playerNamesArray = Object.keys(this.gameState.players)
         CommonAlgos.shuffle(playerNamesArray)
@@ -56,12 +66,13 @@ GameController.GameController = class {
         }
         this.gameState.phase = Shared.Phases.STARTED
         // user of this object will probably want to request a gameStateUpdateAll at this point
+        this.loggingFunction("info", "The game has initialized.")
     }
     /* Return list of messages to send and a list of recipients for each message
     or return null if there is no message to send. */
     handleMessage(message, sendingPlayer){
         if(!sendingPlayer in this.gameState.players){
-            console.log("Warning: message sent by player that does not exist in the game.")
+            this.loggingFunction("warn", "Message sent by player that does not exist in the game.")
             return null
         }
         switch(message.type){
@@ -69,7 +80,7 @@ GameController.GameController = class {
                 return this.gameStateReqHandler(sendingPlayer)
             case Shared.ClientMessageType.VOTECAST:
                 if(!("choice" in message)){
-                    console.log("Warning: Missing \"choice\" property in received vote cast message.")
+                    this.loggingFunction("warn", "Missing \"choice\" property in received vote cast message.")
                     return null
                 }
                 else {
@@ -79,7 +90,7 @@ GameController.GameController = class {
                 return this.ackHandler(sendingPlayer)
             case Shared.ClientMessageType.SUGGESTTARGET:
                 if(!("target" in message)){
-                    console.log("Warning: missing \"target\" property in received suggest target message.")
+                    this.loggingFunction("warn", "Missing \"target\" property in received suggest target message.")
                     return null
                 }
                 else{
@@ -87,7 +98,7 @@ GameController.GameController = class {
                 }
             case Shared.ClientMessageType.CHATMESSAGE:
                 if(!("text" in message)){
-                    console.log('Warning: missing "text" property in chat message.')
+                    this.loggingFunction("warn", 'Missing "text" property in chat message.')
                     return null
                 }
                 else{
@@ -95,14 +106,14 @@ GameController.GameController = class {
                 }
             case Shared.ClientMessageType.PRIVILEGEDCHATMESSAGE:
                 if(!("text" in message)){
-                    console.log('Warning: missing "text" property in privileged chat message.')
+                    this.loggingFunction("warn", 'Missing "text" property in privileged chat message.')
                     return null
                 }
                 else{
                     return this.chatHandler(sendingPlayer, message.text, true)
                 }
             default:
-                console.log(`Warning: Unknown message type received: \"${message.type}\".`)
+            this.loggingFunction("warn", `Unknown message type received: \"${message.type}\".`)
                 return null
         }
     }
@@ -113,17 +124,17 @@ GameController.GameController = class {
             return [new GameController.GameControllerMessage(recipients,payload)]
         }
         else {
-            console.log("Warning: Request received to return game state for nonexistent player.")
+            this.loggingFunction("warn", "Request received to return game state for nonexistent player.")
             return null
         }
     }
     voteCastHandler(sendingPlayer, choice){
         if(sendingPlayer in this.gameState.votes){
-            console.log("Warning: Vote cast message received for player that already voted.")
+            this.loggingFunction("warn", "Vote cast message received for player that already voted.")
             return null
         }
         if(!(this.livingPlayersCache.has(sendingPlayer))){
-            console.log("Warning: Vote cast message received for player that is dead.")
+            this.loggingFunction("warn", "Vote cast message received for player that is dead.")
             return null
         }
         this.gameState.votes[sendingPlayer] = choice
@@ -199,18 +210,18 @@ GameController.GameController = class {
                 }
             }
             else{
-                console.log(`Warning: privileged vote received by non-privileged player: "${sendingPlayer}".`)
+                this.loggingFunction("warn", `Privileged vote received by non-privileged player: "${sendingPlayer}".`)
                 return null
             }
         }
         else{
-            console.log("Warning: vote received at inappropriate phase.")
+            this.loggingFunction("warn", "Vote received at inappropriate phase.")
             return null
         }
     }
     ackHandler(sendingPlayer){
         if(this.gameState.acks.has(sendingPlayer)){
-            console.log("Warning: acknowledgement received by player who already sent an acknowledgement.")
+            this.loggingFunction("warn", "Acknowledgement received by player who already sent an acknowledgement.")
             return null
         }
         switch(this.gameState.phase){
@@ -283,7 +294,7 @@ GameController.GameController = class {
                     }
                 }
                 else{
-                    console.log("Warning: ack received by non-werewolf for werewolf-only end of night ack screen.")
+                    this.loggingFunction("warn", "Ack received by non-werewolf for werewolf-only end of night ack screen.")
                     return null
                 }
             case Shared.Phases.STARTED:
@@ -316,7 +327,7 @@ GameController.GameController = class {
                     return [new GameController.GameControllerMessage(recipients, payload)]
                 }
             default:
-                console.log("Warning: ack received at inappropriate phase.")
+                this.loggingFunction("warn", "Ack received at inappropriate phase.")
                 return null
         }
     }
@@ -332,12 +343,12 @@ GameController.GameController = class {
                             return this.gameStateUpdateAll()
                         }
                         else{
-                            console.log("Warning: target player not in set of living players.")
+                            this.loggingFunction("warn", "Target player not in set of living players.")
                             return null
                         }
                     }
                     else{
-                        console.log("Warning: player that chose target not in set of living players.")
+                        this.loggingFunction("warn", "Player that chose target not in set of living players.")
                         return null
                     }
                 case Shared.Phases.NIGHTTIME:
@@ -349,12 +360,12 @@ GameController.GameController = class {
                             return this.gameStateUpdateAll()
                         }
                         else{
-                            console.log("Warning: target player not in set of living villagers.")
+                            this.loggingFunction("warn", "Target player not in set of living villagers.")
                             return null
                         }
                     }
                     else{
-                        console.log("Warning: player that chose target not in set of living werewolves.")
+                        this.loggingFunction("warn", "Player that chose target not in set of living werewolves.")
                         return null
                     }
                 /* Fairly high chance for race condition to occur where multiple targets are suggested
@@ -364,7 +375,7 @@ GameController.GameController = class {
             }
         }
         else{
-            console.log(`Warning: suggested target player "${target}" does not exist in game.`)
+            this.loggingFunction("warn", `Suggested target player "${target}" does not exist in game.`)
         }
     }
     chatHandler(sendingPlayer, text, isPrivileged){
@@ -391,7 +402,7 @@ GameController.GameController = class {
             return [new GameController.GameControllerMessage(recipients, payload)]
         }
         else{
-            console.log("Warning: invalid text field found in chat message.")
+            this.loggingFunction("warn", "Invalid text field found in chat message.")
         }
     }
     livingWerewolves(){
@@ -413,7 +424,7 @@ GameController.GameController = class {
                     gameStateCopy.players[player].isAlive = this.gameState.players[player].isAlive
                 }
                 else{
-                    console.log(`Warning: player "${player}" with falsy value found in players object.`)
+                    this.loggingFunction("warn", `Player "${player}" with falsy value found in players object.`)
                 }
             }
         }
@@ -431,7 +442,7 @@ GameController.GameController = class {
                     gameStateCopy.players[player].isAlive = this.gameState.players[player].isAlive
                 }
                 else{
-                    console.log(`Warning: player "${player}" with falsy value found in players object.`)
+                    this.loggingFunction("warn", `Player "${player}" with falsy value found in players object.`)
                 }
             }
         }
@@ -461,7 +472,7 @@ GameController.GameController = class {
             }
         }
         else{
-            console.log("Warning: raw game state update requested for non-existent player.")
+            this.loggingFunction("warn", "Raw game state update requested for non-existent player.")
             return null
         }
     }
@@ -470,7 +481,7 @@ GameController.GameController = class {
             return new [GameController.GameControllerMessage([player], rawGameStateUpdateForPlayer(player))]
         }
         else{
-            console.log("Warning: game state update requested for non-existent player.")
+            this.loggingFunction("warn", "Game state update requested for non-existent player.")
             return null
         }
     }

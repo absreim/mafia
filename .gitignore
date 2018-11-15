@@ -25,3 +25,7 @@
 
 # snyk
 **/.snyk
+
+# app logs
+
+combined.log

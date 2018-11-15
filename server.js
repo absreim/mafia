@@ -6,6 +6,7 @@ const pgPromise = require("pg-promise")()
 const pgSession = require("connect-pg-simple")(expressSession)
 const sharedSession = require("express-socket.io-session")
 const socketIo = require("socket.io")
+const winston = require("winston")
 
 const Shared = require("./shared.js")
 const settings = require("./settings.json")
@@ -19,13 +20,39 @@ const db = pgPromise(connection)
 const sessionStore = new pgSession({pgPromise: db})
 const auth = new Authentication(db)
 
+const isProduction = process.env.NODE_ENV == "production"
+const sessionSecret = isProduction ? process.env.SECRET : settings.dev_secret
+
 const session = expressSession({
-    secret: settings.dev_secret,
+    secret: sessionSecret,
     store: sessionStore,
     resave: false,
     saveUninitialized: false,
     cookie: {domain: settings.cookie_domain}
  })
+
+const myFormat = winston.format.printf(logEntryObj => {
+    return `${logEntryObj.timestamp} ${logEntryObj.level}: ${logEntryObj.message}`;
+})
+const combinedFormat = winston.format.combine(winston.format.timestamp(), myFormat)
+
+const logger = winston.createLogger({
+    level: 'info',
+    format: combinedFormat,
+    transports: [
+        new winston.transports.File({ filename: 'combined.log' })
+    ]
+})
+
+//
+// If we're not in production then log to the `console` with the format:
+// `${info.level}: ${info.message} JSON.stringify({ ...rest }) `
+// 
+if (!isProduction) {
+    logger.add(new winston.transports.Console({
+        format: combinedFormat
+    }))
+}
 
 app.use(session)
 
@@ -117,20 +144,20 @@ app.post("/api/deleteAccount", function(req,res){
             if(req.body.password){
                 auth.authenticate(req.session.userId, req.body.password, function(err, result){
                     if(err){
-                        console.log("Error encountered when attempting authentication for account deletion: " + err)
+                        logger.error("Error encountered when attempting authentication for account deletion: " + err)
                         res.send({outcome: Shared.AccountDeleteOutcome.INTERNALERROR})
                     }
                     else{
                         if(result){
                             auth.deleteUser(req.session.userId, function(err){
                                 if(err){
-                                    console.log("Error encountered when attempting account deletion: " + err)
+                                    logger.error("Error encountered when attempting account deletion: " + err)
                                     res.send({outcome: Shared.AccountDeleteOutcome.INTERNALERROR})
                                 }
                                 else{
                                     req.session.destroy(function(err){
                                         if(err){
-                                            console.log("Error destroying session after deleting account: " + err)
+                                            logger.error("Error destroying session after deleting account: " + err)
                                         }
                                         res.send({outcome: Shared.AccountDeleteOutcome.SUCCESS})
                                     })
@@ -162,14 +189,14 @@ app.post("/api/changePassword", function(req,res){
             if(req.body.oldPassword && req.body.newPassword){
                 auth.authenticate(req.session.userId, req.body.oldPassword, function(err, result){
                     if(err){
-                        console.log("Error encountered when attempting authentication for password change: " + err)
+                        logger.error("Error encountered when attempting authentication for password change: " + err)
                         res.send({outcome: Shared.ChangePasswordOutcome.INTERNALERROR})
                     }
                     else{
                         if(result){
                             auth.changePassword(req.session.userId, req.body.newPassword, function(err){
                                 if(err){
-                                    console.log("Error encountered when attempting password change: " + err)
+                                    logger.error("Error encountered when attempting password change: " + err)
                                     res.send({outcome: Shared.ChangePasswordOutcome.INTERNALERROR})
                                 }
                                 else{
@@ -278,12 +305,18 @@ function gameEndCallback(name, players){
                 delete userToGameMap[player]
             }
             else{
-                console.log("Warning: in game end callback, tried to delete player from user to game mapping, but user did not exist in the mapping.")
+                logger.warn("In game end callback, tried to delete player from user to game mapping, but user did not exist in the mapping.")
             }
         }
     }
     else{
-        console.log("Warning: game end callback received from game that doesn't exist in the started games list.")
+        logger.warn("Game end callback received from game that doesn't exist in the started games list.")
+    }
+}
+
+function generateGCLoggingFn(gameName){
+    return function(level, text){
+        logger.log(level, `From game "${gameName}" - ${text}`)
     }
 }
 
@@ -301,7 +334,7 @@ io.on("connection", function(socket){
             }
             else{
                 socket.emit(Shared.ServerSocketEvent.SYSTEMNOTICE, "Received game action message, but you do not appear to be in a game.")
-                console.log("Warning: game action message received from user not in a game.")
+                logger.warn("Game action message received from user not in a game.")
             }
         })
         socket.on(Shared.ClientSocketEvent.INITIALSTATUSREQUEST, function(){
@@ -439,12 +472,12 @@ io.on("connection", function(socket){
                         let gameController = null
                         try{
                             gameController = new GameController.GameController(Array.from(currentGame.players), currentGame.numWerewolves, 
-                                (players) => gameEndCallback(data.name, players))
+                                (players) => gameEndCallback(data.name, players), generateGCLoggingFn(data.name))
                         }
                         catch(error){
                             socket.emit(Shared.ServerSocketEvent.JOINGAMEOUTCOME, {
                                 type: Shared.JoinGameOutcome.INTERNALERROR})
-                            console.error("Error occurred while creating game controller " + error)
+                            logger.error("Error occurred while creating game controller " + error)
                         }
                         if(gameController){
                             startedGames[data.name] = gameController
@@ -559,21 +592,21 @@ io.on("connection", function(socket){
                         }
                     }
                     else{
-                        console.log("Warning: lobby game chat message " + 
+                        logger.warn("Lobby game chat message " + 
                             "received by player not in a lobby game.")
                     }
                 }
             }
             else{
-                console.log("Warning: received malformed lobby game chat message.")
+                logger.warn("Received malformed lobby game chat message.")
             }
         })
     }
     else{
         socket.emit(Shared.ServerSocketEvent.SYSTEMNOTICE, "Unable to determine your user account. Disconnecting.")
         socket.disconnect(true)
-        console.log("Warning: user connected without session information.")
+        logger.warn("User connected without session information.")
     }
 })
 
-server.listen(settings.port, () => console.log(`Mafia server listening on port ${settings.port}!`))
+server.listen(settings.port, () => logger.info(`Mafia server listening on port ${settings.port}!`))

@@ -60,7 +60,6 @@ const Authentication = class {
     authenticate(username, password, callback){
         this.db.one("SELECT hash FROM accounts WHERE username = $1",[username]).then(
             function(data){
-                console.log(data)
                 bcrypt.compare(password, data.hash, function(err, result){
                     if(err){
                         callback(err, null)
