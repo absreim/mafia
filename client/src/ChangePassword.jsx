@@ -33,7 +33,7 @@ class ChangePassword extends Component{
     render(){
         return(
             <form onSubmit={this.handleSubmit}>
-                <h2>Change your password</h2>
+                <h3>Change your password</h3>
                 <p>Enter your existing password to change the password for the account&nbsp;
                     <strong>{this.props.username}</strong>.</p>
                 <label htmlFor="old">Current password:</label>
