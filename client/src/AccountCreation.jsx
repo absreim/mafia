@@ -50,7 +50,9 @@ class AccountCreation extends Component {
                 <label htmlFor="confirm">Confirm Password:</label>
                 <input className="login-form__text-input" type="password" id="confirm" 
                     value={this.state.confirm} onChange={this.handleConfirmChange} />
-                <input type="submit" value="Submit" />
+                <input type="submit" value="Submit"
+                    disabled={this.state.username.length === 0 || this.state.password.length === 0
+                    || this.state.confirm.length === 0 } />
                 <p>Already have an account? You may <Link to={this.props.loginUrl}>log in</Link> to 
                     it instead.</p>
             </form>

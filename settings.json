@@ -2,7 +2,9 @@
     "db_connection_params": {
         "host": "localhost",
         "port": "5432",
-        "database": "mafia_express"
+        "database": "mafia",
+        "username": "mafia",
+        "password": "password"
     },
     "cookie_domain": "localhost",
     "dev_secret": "secret",

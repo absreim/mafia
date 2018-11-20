@@ -613,5 +613,23 @@ io.on("connection", function(socket){
     }
 })
 
+function gracefulShutdown(){
+    server.close(function(err){
+        if(err){
+            logger.error("Error occurred while closing server: " + err)
+            process.exit(1)
+        }
+        process.exit(0)
+    })
+}
+
+process.on("SIGINT", () => {
+    logger.info("Received SIGINT. Shutting down gracefully.")
+    gracefulShutdown()
+})
+process.on("SIGTERM", () => {
+    logger.info("Received SIGTERM. Shutting down gracefully.")
+    gracefulShutdown()
+})
 const port = isProduction ? settings.prod_port : settings.dev_port
 server.listen(port, () => logger.info(`Mafia server listening on port ${port}!`))

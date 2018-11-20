@@ -395,7 +395,7 @@ class App extends Component {
     if(this.state.loginStatus === null){
       return (
         <React.Fragment>
-          <h2>Loading data from server...</h2>
+          <h3>Loading data from server...</h3>
         </React.Fragment>
       )
     }

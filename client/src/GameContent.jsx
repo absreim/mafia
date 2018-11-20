@@ -286,7 +286,9 @@ class GameContent extends Component{
                         phase: GameContentPhase.INLOBBYGAME,
                         isLobbyGame: true,
                         lobbyGameState: data.gameState,
-                        gameName: data.gameName
+                        gameName: data.gameName,
+                        chatMessages: [],
+                        privilegedChatMessages: []
                     })
                     this.socket.emit(Shared.ClientSocketEvent.UNSUBSCRIBELOBBYUPDATES)
                     break
