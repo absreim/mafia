@@ -40,7 +40,7 @@ class ChangePassword extends Component{
                 <input id="old" type="password" value={this.state.old} onChange={this.handleOldChange} />
                 <label htmlFor="new">New password:</label>
                 <input id="new" type="password" value={this.state.new} onChange={this.handleNewChange} />
-                <input type="submit" value="Submit" />
+                <input type="submit" value="Submit" disabled={this.state.old.length === 0 || this.state.new.length === 0} />
             </form>
         )
     }

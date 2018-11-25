@@ -14,6 +14,8 @@ deadVillagers - array of dead villagers. If player is a villager, contains all d
 votes - object of player name => vote cast.
 true is Yea.
 false is Nay.
+acks - set of players for which the server 
+has received acknowledgements
 sendAck - function to send ack to server
 */
 
@@ -30,18 +32,22 @@ class InGameNighttimeSummary extends Component{
     }
     render(){
         const livingVillagersRows = Array.from(this.props.livingVillagers).map((player) => {
+            const acknowledged = this.props.acks.has(player) ? "Yes" : "No"
             return (
                 <tr key={player}>
                     <td>{player}</td>
+                    <td>{acknowledged}</td>
                 </tr>
             )
         })
         let deadVillagersRows = null
         if(this.props.deadVillagers.size > 0){
             deadVillagersRows = Array.from(this.props.deadVillagers).map((player) => {
+                const acknowledged = this.props.acks.has(player) ? "Yes" : "No"
                 return (
                     <tr key={player}>
                         <td>{player}</td>
+                        <td>{acknowledged}</td>
                     </tr>
                 )
             })
@@ -63,7 +69,7 @@ class InGameNighttimeSummary extends Component{
                     <table>
                         <thead>
                             <tr>
-                                <th>Dead Villagers</th>
+                                <th colSpan="2">Dead Villagers</th>
                             </tr>
                         </thead>
                         <tbody>{deadVillagersRows}</tbody>
@@ -73,9 +79,11 @@ class InGameNighttimeSummary extends Component{
             let deadWerewolvesTable = null
             if(this.props.deadWerewolves.size > 0){
                 const deadWerewolvesRows = Array.from(this.props.deadWerewolves).map((player) => {
+                    const acknowledged = this.props.acks.has(player) ? "Yes" : "No"
                     return (
                         <tr key={player}>
                             <td>{player}</td>
+                            <td>{acknowledged}</td>
                         </tr>
                     )
                 })
@@ -83,7 +91,7 @@ class InGameNighttimeSummary extends Component{
                     <table>
                         <thead>
                             <tr>
-                                <th>Dead Werewolves</th>
+                                <th colSpan="2">Dead Werewolves</th>
                             </tr>
                         </thead>
                         <tbody>{deadWerewolvesRows}</tbody>
@@ -92,6 +100,7 @@ class InGameNighttimeSummary extends Component{
             }
             const votesRows = Object.keys(this.props.votes).map((player) => {
                 let voteDesc = "?"
+                const acknowledged = this.props.acks.has(player) ? "Yes" : "No"
                 if(this.props.votes[player] === true){
                     voteDesc = "Yea"
                 }
@@ -102,6 +111,7 @@ class InGameNighttimeSummary extends Component{
                     <tr key={player}>
                         <td>{player}</td>
                         <td>{voteDesc}</td>
+                        <td>{acknowledged}</td>
                     </tr>
                 )
             })
@@ -110,11 +120,12 @@ class InGameNighttimeSummary extends Component{
                     <table>
                         <thead>
                             <tr>
-                                <th colSpan="2">Votes Cast by Living Werewolves</th>
+                                <th colSpan="3">Votes Cast by Living Werewolves</th>
                             </tr>
                             <tr>
                                 <th>Name</th>
                                 <th>Vote</th>
+                                <th>Acknowledged</th>
                             </tr>
                         </thead>
                         <tbody>{votesRows}</tbody>
@@ -122,7 +133,11 @@ class InGameNighttimeSummary extends Component{
                     <table>
                         <thead>
                             <tr>
-                                <th>Living Villagers</th>
+                                <th colSpan="2">Living Villagers</th>
+                            </tr>
+                            <tr>
+                                <th>Name</th>
+                                <th>Acknowledged</th>
                             </tr>
                         </thead>
                         <tbody>{livingVillagersRows}</tbody>
@@ -145,7 +160,11 @@ class InGameNighttimeSummary extends Component{
                     <table>
                         <thead>
                             <tr>
-                                <th>Dead Players</th>
+                                <th colSpan="2">Dead Players</th>
+                            </tr>
+                            <tr>
+                                <th>Name</th>
+                                <th>Acknowledged</th>
                             </tr>
                         </thead>
                         <tbody>{deadVillagersRows}</tbody>
@@ -157,7 +176,11 @@ class InGameNighttimeSummary extends Component{
                     <table>
                         <thead>
                             <tr>
-                                <th>Living Players</th>
+                                <th colSpan="2">Living Players</th>
+                            </tr>
+                            <tr>
+                                <th>Name</th>
+                                <th>Acknowledged</th>
                             </tr>
                         </thead>
                         <tbody>{livingVillagersRows}</tbody>

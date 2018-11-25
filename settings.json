@@ -3,7 +3,7 @@
         "host": "localhost",
         "port": "5432",
         "database": "mafia",
-        "username": "mafia",
+        "user": "mafia",
         "password": "password"
     },
     "cookie_domain": "localhost",

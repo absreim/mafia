@@ -17,6 +17,8 @@ Values are ignored if playerIsWerewolf is false.
 votes - object of player name => vote cast.
 true is Yea.
 false is Nay.
+acks - set of players for which the server 
+has received acknowledgements
 sendAck - function to send ack to server
 */
 
@@ -48,6 +50,7 @@ class InGameDaytimeSummary extends Component{
             const votesRows = Object.keys(this.props.votes).map((player) => {
                 let voteDesc = "?"
                 const faction = this.props.livingPlayers[player] ? "Werewolf" : "Villager"
+                const acknowledged = this.props.acks.has(player) ? "Yes" : "No"
                 if(this.props.votes[player] === true){
                     voteDesc = "Yea"
                 }
@@ -59,6 +62,7 @@ class InGameDaytimeSummary extends Component{
                         <td>{player}</td>
                         <td>{voteDesc}</td>
                         <td>{faction}</td>
+                        <td>{acknowledged}</td>
                     </tr>
                 )
             })
@@ -66,12 +70,13 @@ class InGameDaytimeSummary extends Component{
                 <table>
                     <thead>
                         <tr>
-                            <th colSpan="3">Votes Cast by Each Player and their Faction</th>
+                            <th colSpan="4">Votes Cast by Each Player and their Faction</th>
                         </tr>
                         <tr>
                             <th>Name</th>
                             <th>Vote</th>
                             <th>Faction</th>
+                            <th>Acknwoledged</th>
                         </tr>
                         <tbody>{votesRows}</tbody>
                     </thead>
@@ -79,11 +84,13 @@ class InGameDaytimeSummary extends Component{
             )
             if(this.props.deadPlayers.size > 0){
                 const deadRows = Object.keys(this.props.deadPlayers).map((player) => {
-                const faction = this.props.livingPlayers[player] ? "Werewolf" : "Villager"
+                    const faction = this.props.livingPlayers[player] ? "Werewolf" : "Villager"
+                    const acknowledged = this.props.acks.has(player) ? "Yes" : "No"
                     return(
                         <tr key={player}>
                             <td>{player}</td>
                             <td>{faction}</td>
+                            <td>{acknowledged}</td>
                         </tr>
                     )
                 })
@@ -91,11 +98,12 @@ class InGameDaytimeSummary extends Component{
                     <table>
                         <thead>
                             <tr>
-                                <th colSpan="2">Dead Players and their Faction</th>
+                                <th colSpan="3">Dead Players and their Faction</th>
                             </tr>
                             <tr>
                                 <th>Name</th>
                                 <th>Faction</th>
+                                <th>Acknwoledged</th>
                             </tr>
                         </thead>
                         <tbody>{deadRows}</tbody>
@@ -106,6 +114,7 @@ class InGameDaytimeSummary extends Component{
         else{
             const votesRows = Object.keys(this.props.votes).map((player) => {
                 let voteDesc = "?"
+                const acknowledged = this.props.acks.has(player) ? "Yes" : "No"
                 if(this.props.votes[player] === true){
                     voteDesc = "Yea"
                 }
@@ -116,6 +125,7 @@ class InGameDaytimeSummary extends Component{
                     <tr key={player}>
                         <td>{player}</td>
                         <td>{voteDesc}</td>
+                        <td>{acknowledged}</td>
                     </tr>
                 )
             })
@@ -123,11 +133,12 @@ class InGameDaytimeSummary extends Component{
                 <table>
                     <thead>
                         <tr>
-                            <th colSpan="2">Votes Cast by Each Player</th>
+                            <th colSpan="3">Votes Cast by Each Player</th>
                         </tr>
                         <tr>
                             <th>Name</th>
                             <th>Vote</th>
+                            <th>Acknwoledged</th>
                         </tr>
                         <tbody>{votesRows}</tbody>
                     </thead>
@@ -135,9 +146,11 @@ class InGameDaytimeSummary extends Component{
             )
             if(this.props.deadPlayers.size > 0){
                 const deadRows = Object.keys(this.props.deadPlayers).map((player) => {
+                    const acknowledged = this.props.acks.has(player) ? "Yes" : "No"
                     return(
                         <tr key={player}>
                             <td>{player}</td>
+                            <td>{acknowledged}</td>
                         </tr>
                     )
                 })
@@ -145,10 +158,11 @@ class InGameDaytimeSummary extends Component{
                     <table>
                         <thead>
                             <tr>
-                                <th>Dead Players</th>
+                                <th colSpan="2">Dead Players</th>
                             </tr>
                             <tr>
                                 <th>Name</th>
+                                <th>Acknwoledged</th>
                             </tr>
                         </thead>
                         <tbody>{deadRows}</tbody>

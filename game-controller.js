@@ -189,11 +189,7 @@ GameController.GameController = class {
                     else{
                         this.gameState.phase = Shared.Phases.NIGHTTIMEVOTEFAILED
                         this.gameState.acks.clear()
-                        const recipients = Object.keys(this.gameState.players).filter(
-                            player => this.gameState.players[player].isWerewolf
-                        )
-                        const payload = this.gameStateMessage(true)
-                        return [new GameController.GameControllerMessage(recipients, payload)]
+                        return this.gameStateUpdateAll()
                     }
                 }
                 else{
@@ -277,6 +273,7 @@ GameController.GameController = class {
                 if(this.gameState.players[sendingPlayer].isWerewolf){
                     this.gameState.acks.add(sendingPlayer)
                     if(this.gameState.acks.size == this.livingWerewolves().length){
+                        this.gameState.acks.clear() // keeping acks would reveal werewolves to villagers
                         this.gameState.phase = Shared.Phases.NIGHTTIME
                         this.gameState.chosenPlayer = null
                         return this.gameStateUpdateAll()
@@ -427,6 +424,7 @@ GameController.GameController = class {
                     this.loggingFunction("warn", `Player "${player}" with falsy value found in players object.`)
                 }
             }
+            gameStateCopy.acks = Array.from(this.gameState.acks)
         }
         else{ // to simulate lack to privileged information, all players are marked as villagers
             if(gameStateCopy.phase == Shared.Phases.DAYTIMEVOTING || gameStateCopy.phase == Shared.Phases.ENDOFDAY ||
@@ -435,6 +433,13 @@ GameController.GameController = class {
                 for (let player in this.gameState.votes){
                     gameStateCopy.votes[player] = this.gameState.votes[player]
                 }
+            }
+            if(this.gameStateCopy.phase != Shared.Phases.NIGHTTIMEVOTEFAILED){
+                // revealing acks in NIGHTTIMEVOTEFAILED would reveal identity of werewolves
+                gameStateCopy.acks = Array.from(this.gameState.acks)
+            }
+            else{
+                gameStateCopy.acks = []
             }
             for(let player in this.gameState.players){
                 if(this.gameState.players[player]){
@@ -446,7 +451,6 @@ GameController.GameController = class {
                 }
             }
         }
-        gameStateCopy.acks = Array.from(this.gameState.acks)
         return gameStateCopy
     }
     /* Return message payload describing game state. Non-privileged messages have faction

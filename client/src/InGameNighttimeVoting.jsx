@@ -115,7 +115,7 @@ class InGameNighttimeVoting extends Component{
             })
             return (
                 <div>
-                    <h2>It is time to vote on whether to kill the chosen villager.</h2>
+                    <h3>It is time to vote on whether to kill the chosen villager.</h3>
                     <p>The chosen villager is&nbsp;
                         <span className=".chosen-player-desc__player-name">{this.props.chosenPlayer}</span>.</p>
                     <p>A simple majority is need to kill the chosen villager.</p>
