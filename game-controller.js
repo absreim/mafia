@@ -410,8 +410,8 @@ GameController.GameController = class {
     gameStateCopy(isPrivileged){
         const gameStateCopy = new Shared.GameState()
         gameStateCopy.phase = this.gameState.phase
-        gameStateCopy.chosenPlayer = this.gameState.chosenPlayer
         if(isPrivileged){
+            gameStateCopy.chosenPlayer = this.gameState.chosenPlayer
             for (let player in this.gameState.votes){
                 gameStateCopy.votes[player] = this.gameState.votes[player]
             }
@@ -429,11 +429,17 @@ GameController.GameController = class {
         else{ // to simulate lack to privileged information, all players are marked as villagers
             if(gameStateCopy.phase == Shared.Phases.DAYTIMEVOTING || gameStateCopy.phase == Shared.Phases.ENDOFDAY ||
                 gameStateCopy.phase == Shared.Phases.DAYTIMEVOTEFAILED){
-                // revealing nighttime votes would reveal identity of werewolves
-                for (let player in this.gameState.votes){
-                    gameStateCopy.votes[player] = this.gameState.votes[player]
-                }
+                    // hide night time player choice from villagers
+                    gameStateCopy.chosenPlayer = this.gameState.chosenPlayer
+                    // revealing nighttime votes would reveal identity of werewolves
+                    for (let player in this.gameState.votes){
+                        gameStateCopy.votes[player] = this.gameState.votes[player]
+                    }
             }
+            else if(gameStateCopy.phase == Shared.Phases.ENDOFNIGHT){
+                gameStateCopy.chosenPlayer = this.gameState.chosenPlayer
+            }
+
             if(this.gameStateCopy.phase != Shared.Phases.NIGHTTIMEVOTEFAILED){
                 // revealing acks in NIGHTTIMEVOTEFAILED would reveal identity of werewolves
                 gameStateCopy.acks = Array.from(this.gameState.acks)
@@ -441,6 +447,7 @@ GameController.GameController = class {
             else{
                 gameStateCopy.acks = []
             }
+            
             for(let player in this.gameState.players){
                 if(this.gameState.players[player]){
                     gameStateCopy.players[player] = new Shared.PlayerDetails(false)
