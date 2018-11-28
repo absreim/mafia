@@ -7,29 +7,33 @@ const pgSession = require("connect-pg-simple")(expressSession)
 const sharedSession = require("express-socket.io-session")
 const socketIo = require("socket.io")
 const winston = require("winston")
+const redis = require("redis")
+const socketIoRedis = require("socket.io-redis")
 
+// project-specific imports
 const Shared = require("./shared.js")
 const settings = require("./settings.json")
 const Authentication = require("./authentication.js")
 const GameController =  require("./game-controller.js")
 
-const app = express()
-
-const connection = settings.db_connection_params
-const db = pgPromise(connection)
-const sessionStore = new pgSession({pgPromise: db})
-const auth = new Authentication(db)
-
 const isProduction = process.env.NODE_ENV == "production"
-const sessionSecret = isProduction ? process.env.SECRET : settings.dev_secret
 
+// postgres
+const db = pgPromise(settings.db_connection_params)
+
+// sessions
+const sessionStore = new pgSession({pgPromise: db})
+const sessionSecret = isProduction ? process.env.SECRET : settings.dev_secret
 const session = expressSession({
     secret: sessionSecret,
     store: sessionStore,
     resave: false,
     saveUninitialized: false,
     cookie: {domain: settings.cookie_domain}
- })
+})
+
+// redis
+const redisClient = redis.createClient(settings.redis_options)
 
 // winston logging
 const myFormat = winston.format.printf(logEntryObj => {
@@ -49,6 +53,10 @@ if (!isProduction) {
     }))
 }
 
+const auth = new Authentication(db)
+
+// express
+const app = express()
 app.use(session)
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -245,18 +253,13 @@ app.get("/api/loginstatus", function(req, res){
 })
 
 const server = http.Server(app)
+
+// socket.io
 const io = socketIo(server)
 io.use(sharedSession(session))
-
-if(isProduction){
-    app.use(express.static("client/build"))
-    app.all("*", (req, res) => {
-        res.redirect("index.html")
-    })
-}
+io.adapter(socketIoRedis({pubClient: redisClient, subClient: redisClient}))
 
 const LOBBYUPDATESROOM = "lobbyUpdates"
-
 const startedGames = {} // games that have started
 const lobbyGames = {} // games in lobby that have not started
 const userToGameMap = {} // user to game name, not game object
@@ -631,5 +634,14 @@ process.on("SIGTERM", () => {
     logger.info("Received SIGTERM. Shutting down gracefully.")
     gracefulShutdown()
 })
+
+// host front end
+if(isProduction){
+    app.use(express.static("client/build"))
+    app.all("*", (req, res) => {
+        res.redirect("index.html")
+    })
+}
+
 const port = isProduction ? settings.prod_port : settings.dev_port
 server.listen(port, () => logger.info(`Mafia server listening on port ${port}!`))
