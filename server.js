@@ -21,15 +21,6 @@ const sessionStore = new pgSession({pgPromise: db})
 const auth = new Authentication(db)
 
 const isProduction = process.env.NODE_ENV == "production"
-const sessionSecret = isProduction ? process.env.SECRET : settings.dev_secret
-
-const session = expressSession({
-    secret: sessionSecret,
-    store: sessionStore,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {domain: settings.cookie_domain}
- })
 
 // winston logging
 const myFormat = winston.format.printf(logEntryObj => {
@@ -48,6 +39,25 @@ if (!isProduction) {
         format: combinedFormat
     }))
 }
+
+let sessionSecret = settings.dev_secret
+if(process.env.SECRET){
+    sessionSecret = process.env.SECRET
+}
+else{
+    if(isProduction){
+        logger.warn("No SECRET environment variable found." + 
+            "Using secret in setttings file in production mode.")
+    }
+}
+
+const session = expressSession({
+    secret: sessionSecret,
+    store: sessionStore,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {domain: settings.cookie_domain}
+})
 
 app.use(session)
 app.use(bodyParser.json())
@@ -248,7 +258,9 @@ const server = http.Server(app)
 const io = socketIo(server)
 io.use(sharedSession(session))
 
-if(isProduction){
+// ideally the front end should be served by
+// a separate web server (Apache or NGINX)
+if(isProduction && settings.serve_frontend){
     app.use(express.static("client/build"))
     app.all("*", (req, res) => {
         res.redirect("index.html")
