@@ -181,6 +181,9 @@ class App extends Component {
             case Shared.AccountDeleteOutcome.WRONGPASSWORD:
               this.displayMessage("This password you entered was incorrect.")
               break
+            case Shared.ChangePasswordOutcome.ACCOUNTMISSING:
+              this.displayMessage("While attempting to the delete the account, the account was found to no longer exist.")
+              break
             case Shared.AccountDeleteOutcome.SUCCESS:
               this.setState({
                 username: null,
@@ -319,6 +322,9 @@ class App extends Component {
               break
             case Shared.ChangePasswordOutcome.WRONGPASSWORD:
               this.displayMessage("This password you entered was incorrect.")
+              break
+            case Shared.ChangePasswordOutcome.ACCOUNTMISSING:
+              this.displayMessage("The account does not exist.")
               break
             case Shared.ChangePasswordOutcome.SUCCESS:
               this.displayMessage("Password changed successfully.")

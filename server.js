@@ -170,7 +170,7 @@ app.post("/api/deleteAccount", function(req,res){
                     }
                     else{
                         if(result){
-                            auth.deleteUser(req.session.userId, function(err){
+                            auth.deleteUser(req.session.userId, function(err, wasSuccessful){
                                 if(err){
                                     logger.error("Error encountered when attempting account deletion: " + err)
                                     res.send({outcome: Shared.AccountDeleteOutcome.INTERNALERROR})
@@ -180,7 +180,13 @@ app.post("/api/deleteAccount", function(req,res){
                                         if(err){
                                             logger.error("Error destroying session after deleting account: " + err)
                                         }
-                                        res.send({outcome: Shared.AccountDeleteOutcome.SUCCESS})
+                                        if(wasSuccessful){
+                                            res.send({outcome: Shared.AccountDeleteOutcome.SUCCESS})
+                                        }
+                                        else{
+                                            // can occur to due to a very rare race condition
+                                            res.send({outcome: Shared.AccountDeleteOutcome.ACCOUNTMISSING})
+                                        }
                                     })
                                 }
                             })
@@ -215,13 +221,19 @@ app.post("/api/changePassword", function(req,res){
                     }
                     else{
                         if(result){
-                            auth.changePassword(req.session.userId, req.body.newPassword, function(err){
+                            auth.changePassword(req.session.userId, req.body.newPassword, function(err, wasSuccessful){
                                 if(err){
                                     logger.error("Error encountered when attempting password change: " + err)
                                     res.send({outcome: Shared.ChangePasswordOutcome.INTERNALERROR})
                                 }
                                 else{
-                                    res.send({outcome: Shared.ChangePasswordOutcome.SUCCESS})
+                                    if(wasSuccessful){
+                                        res.send({outcome: Shared.AccountDeleteOutcome.SUCCESS})
+                                    }
+                                    else{
+                                        // can occur to due to a very rare race condition
+                                        res.send({outcome: Shared.AccountDeleteOutcome.ACCOUNTMISSING})
+                                    }
                                 }
                             })
                         }

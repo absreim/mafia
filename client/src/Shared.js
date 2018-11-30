@@ -108,7 +108,8 @@ Shared.AccountDeleteOutcome = {
     INTERNALERROR: "internalError",
     MISSINGINFO: "missingInfo",
     WRONGPASSWORD: "wrongPassword",
-    SUCCESS: "success"
+    SUCCESS: "success",
+    ACCOUNTMISSING: "accountMissing"
 }
 
 Shared.LoginOutcome = {
@@ -124,7 +125,8 @@ Shared.ChangePasswordOutcome = {
     INTERNALERROR: "internalError",
     MISSINGINFO: "missingInfo",
     WRONGPASSWORD: "wrongPassword",
-    SUCCESS: "success"
+    SUCCESS: "success",
+    ACCOUNTMISSING: "accountMissing"
 }
 
 Shared.ServerSocketEvent = {

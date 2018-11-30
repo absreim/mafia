@@ -38,9 +38,11 @@ const Authentication = class {
                 callback(err)
             }
             else{
-                database.none("UPDATE accounts SET hash = $1 WHERE username = $2",
+                database.result("UPDATE accounts SET hash = $1 WHERE username = $2",
                     [hash,username]).then(function(data){
-                        callback(null)
+                        const wasSuccessful = data.rowCount > 0
+                        // not successful means account did not exist
+                        callback(null, wasSuccessful)
                     }).catch(
                         function(err){
                             callback(err)
@@ -50,9 +52,11 @@ const Authentication = class {
         })
     }
     deleteUser(username, callback){
-        this.db.none("DELETE FROM accounts WHERE username = $1",[username]).then(
-            function(){
-                callback(null)
+        this.db.result("DELETE FROM accounts WHERE username = $1",[username]).then(
+            function(data){
+                const wasSuccessful = data.rowCount > 0
+                // not successful means account did not exist
+                callback(null, wasSuccessful)
             }
         ).catch(
             function(err){
