@@ -2,8 +2,8 @@ const http = require("http")
 const express = require("express")
 const bodyParser = require("body-parser")
 const expressSession = require("express-session")
+const memoryStore = require("memorystore")(expressSession)
 const pgPromise = require("pg-promise")()
-const pgSession = require("connect-pg-simple")(expressSession)
 const sharedSession = require("express-socket.io-session")
 const socketIo = require("socket.io")
 const winston = require("winston")
@@ -17,23 +17,6 @@ const Authentication = require("./authentication.js")
 const GameController =  require("./game-controller.js")
 
 const isProduction = process.env.NODE_ENV == "production"
-
-// postgres
-const db = pgPromise(settings.db_connection_params)
-
-// sessions
-const sessionStore = new pgSession({pgPromise: db})
-const sessionSecret = isProduction ? process.env.SECRET : settings.dev_secret
-const session = expressSession({
-    secret: sessionSecret,
-    store: sessionStore,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {domain: settings.cookie_domain}
-})
-
-// redis
-const redisClient = redis.createClient(settings.redis_options)
 
 // winston logging
 const myFormat = winston.format.printf(logEntryObj => {
@@ -53,7 +36,39 @@ if (!isProduction) {
     }))
 }
 
+// postgres
+const db = pgPromise(settings.db_connection_params)
+
+// auth
 const auth = new Authentication(db)
+
+// sessions
+// Idea is to use sticky sessions when scaling out
+// to maintain full functionality of socket.io,
+// so might as well store sessions in memory.
+const sessionStore = new memoryStore({
+    checkPeriod: 86400000 // prune expired entries every 24h
+})
+let sessionSecret = settings.dev_secret
+if(process.env.SECRET){
+    sessionSecret = process.env.SECRET
+}
+else{
+    if(isProduction){
+        logger.warn("No SECRET environment variable found." + 
+            "Using secret in setttings file in production mode.")
+    }
+}
+const session = expressSession({
+    secret: sessionSecret,
+    store: sessionStore,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {domain: settings.cookie_domain}
+})
+
+// redis
+const redisClient = redis.createClient(settings.redis_options)
 
 // express
 const app = express()
@@ -258,6 +273,15 @@ const server = http.Server(app)
 const io = socketIo(server)
 io.use(sharedSession(session))
 io.adapter(socketIoRedis({pubClient: redisClient, subClient: redisClient}))
+
+// ideally the front end should be served by
+// a separate web server (Apache or NGINX)
+if(settings.serve_frontend){
+    app.use(express.static("client/build"))
+    app.all("*", (req, res) => {
+        res.redirect("index.html")
+    })
+}
 
 const LOBBYUPDATESROOM = "lobbyUpdates"
 const startedGames = {} // games that have started
@@ -634,14 +658,6 @@ process.on("SIGTERM", () => {
     logger.info("Received SIGTERM. Shutting down gracefully.")
     gracefulShutdown()
 })
-
-// host front end
-if(isProduction){
-    app.use(express.static("client/build"))
-    app.all("*", (req, res) => {
-        res.redirect("index.html")
-    })
-}
 
 const port = isProduction ? settings.prod_port : settings.dev_port
 server.listen(port, () => logger.info(`Mafia server listening on port ${port}!`))

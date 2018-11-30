@@ -13,20 +13,22 @@ const Authentication = class {
                 callback(err)
             }
             else{
-                database.none("INSERT INTO accounts (username, hash) VALUES ($1, $2)",[username, hash]).then(function(data){
-                    callback(null)
-                }).catch(function(err){
-                    callback(err)
-                })
-            }
+                database.none("INSERT INTO accounts (username, hash) VALUES ($1, $2)",
+                    [username, hash]).then(function(data){
+                        callback(null)
+                    }).catch(function(err){
+                        callback(err)
+                    })
+                }
         })
     }
     userExists(username, callback){
-        this.db.oneOrNone("SELECT FROM accounts WHERE username = $1",[username]).then(function(data){
-            const result = data != null
-            callback(null, result)
-        }).catch(function(err){
-            callback(err, null)
+        this.db.oneOrNone("SELECT FROM accounts WHERE username = $1",
+            [username]).then(function(data){
+                const result = data != null
+                callback(null, result)
+            }).catch(function(err){
+                callback(err, null)
         })
     }
     changePassword(username, password, callback){
@@ -36,12 +38,13 @@ const Authentication = class {
                 callback(err)
             }
             else{
-                database.none("UPDATE accounts SET hash = $1 WHERE username = $2",[hash,username]).then(function(data){
-                    callback(null)
-                }).catch(
-                    function(err){
-                        callback(err)
-                    }
+                database.none("UPDATE accounts SET hash = $1 WHERE username = $2",
+                    [hash,username]).then(function(data){
+                        callback(null)
+                    }).catch(
+                        function(err){
+                            callback(err)
+                        }
                 )
             }
         })

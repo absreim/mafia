@@ -2,9 +2,7 @@
     "db_connection_params": {
         "host": "localhost",
         "port": "5432",
-        "database": "mafia",
-        "user": "mafia",
-        "password": "password"
+        "database": "mafia"
     },
     "cookie_domain": "localhost",
     "dev_secret": "secret",
@@ -13,5 +11,6 @@
     "redis_options": {
         "host": "localhost",
         "port": 6379
-    }
+    },
+    "serve_frontend": false
 }
