@@ -2,8 +2,8 @@ const http = require("http")
 const express = require("express")
 const bodyParser = require("body-parser")
 const expressSession = require("express-session")
+const memoryStore = require("memorystore")(expressSession)
 const pgPromise = require("pg-promise")()
-const pgSession = require("connect-pg-simple")(expressSession)
 const sharedSession = require("express-socket.io-session")
 const socketIo = require("socket.io")
 const winston = require("winston")
@@ -17,7 +17,6 @@ const app = express()
 
 const connection = settings.db_connection_params
 const db = pgPromise(connection)
-const sessionStore = new pgSession({pgPromise: db})
 const auth = new Authentication(db)
 
 const isProduction = process.env.NODE_ENV == "production"
@@ -51,6 +50,12 @@ else{
     }
 }
 
+// Idea is to use sticky sessions when scaling out
+// to maintain full functionality of socket.io,
+// so might as well store sessions in memory.
+const sessionStore = new memoryStore({
+    checkPeriod: 86400000 // prune expired entries every 24h
+})
 const session = expressSession({
     secret: sessionSecret,
     store: sessionStore,
