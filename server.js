@@ -144,7 +144,15 @@ app.post("/api/signup", function(req, res){
                 else{
                     auth.createUser(req.body.username, req.body.password, function(err){
                         if(err){
-                            res.send({outcome: Shared.AccountCreateOutcome.INTERNALERROR})
+                            if(err.code && err.code == 23505){
+                                // Unlikely but possible race condition where the user name was
+                                // taken in between checking for the user's existence and writing
+                                // to the database.
+                                res.send({outcome: Shared.AccountCreateOutcome.EXISTS})
+                            }
+                            else{
+                                res.send({outcome: Shared.AccountCreateOutcome.INTERNALERROR})
+                            }
                         }
                         else{
                             res.send({outcome: Shared.AccountCreateOutcome.SUCCESS})
