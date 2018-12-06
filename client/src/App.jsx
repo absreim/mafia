@@ -14,6 +14,8 @@ import MainMenu from "./MainMenu"
 import Welcome from "./Welcome"
 import AccountMenu from "./AccountMenu"
 import GameContent from "./GameContent"
+import Instructions from "./Instructions"
+import About from "./About"
 import Shared from "./Shared"
 import {Switch, Route, Redirect, withRouter} from "react-router-dom"
 
@@ -34,6 +36,8 @@ class App extends Component {
     this.navigateChangePassword = this.navigateChangePassword.bind(this)
     this.navigateMainMenu = this.navigateMainMenu.bind(this)
     this.navigateGameContent = this.navigateGameContent.bind(this)
+    this.navigateInstructions = this.navigateInstructions.bind(this)
+    this.navigateAbout = this.navigateAbout.bind(this)
     this.logout = this.logout.bind(this)
     this.deleteAccount = this.deleteAccount.bind(this)
     this.login = this.login.bind(this)
@@ -42,6 +46,8 @@ class App extends Component {
     this.handleHomeLink = this.handleHomeLink.bind(this)
     this.handleGameLink = this.handleGameLink.bind(this)
     this.handleMainLink = this.handleMainLink.bind(this)
+    this.handleInstructionsLink = this.handleInstructionsLink.bind(this)
+    this.handleAboutLink = this.handleAboutLink.bind(this)
   }
   componentDidMount(){
     this.updateLoginStatus()
@@ -371,9 +377,17 @@ class App extends Component {
     this.clearMessage()
     this.props.history.push("/game")
   }
+  navigateInstructions(){
+    this.clearMessage()
+    this.props.history.push("/instructions")
+  }
+  navigateAbout(){
+    this.clearMessage()
+    this.props.history.push("/about")
+  }
 
   // Navbar link click event handlers. Used to add the additional functionality
-  // of clearing and status messages.
+  // of clearing status messages.
 
   handleMainLink(event){
     event.preventDefault()
@@ -390,8 +404,27 @@ class App extends Component {
     this.clearMessage()
     this.props.history.push("/")
   }
+  handleInstructionsLink(event){
+    event.preventDefault()
+    this.clearMessage()
+    this.props.history.push("/instructions")
+  }
+  handleAboutLink(event){
+    event.preventDefault()
+    this.clearMessage()
+    this.props.history.push("/about")
+  }
 
   getMainContent(){
+    const commonRoutes = 
+      <React.Fragment>
+        <Route path="/account-create" render={({match, location, history}) => 
+            <AccountCreation submitCredentials={this.createAccountWithConfirm} 
+              loginUrl="/login" match={match} location={location} history={history} />
+          } />
+        <Route path="/instructions" component={Instructions} />
+        <Route path="/about" component={About} />
+      </React.Fragment>
     if(this.state.loginStatus === null){
       return (
         <React.Fragment>
@@ -406,13 +439,10 @@ class App extends Component {
             <GameContent handleMainMenu={this.navigateMainMenu} username={this.state.username} />
           } />
           <Route path="/main-menu" render={() => 
-            <MainMenu handleEnterGame={this.navigateGameContent} handleManage={this.navigateManage} 
-              handleLogout={this.logout} username={this.state.username} />
+            <MainMenu username={this.state.username} handleEnterGame={this.navigateGameContent} 
+              handleManage={this.navigateManage} handleLogout={this.logout} 
+              handleInstructions={this.navigateInstructions} handleAbout={this.navigateAbout} />
           } />
-          <Route path="/account-create" render={({match, location, history}) => 
-            <AccountCreation submitCredentials={this.createAccountWithConfirm} 
-              loginUrl="/login" match={match} location={location} history={history} />
-            } />
           <Route path="/account-delete" render={() =>
             <AccountDelete submitPassword={this.deleteAccount} username={this.state.username} />
           } />
@@ -423,6 +453,7 @@ class App extends Component {
           <Route path="/change-password" render={() => 
             <ChangePassword submitPasswords={this.changePassword} username={this.state.username} />
           } />
+          {commonRoutes}
           <Redirect to="/main-menu" />
         </Switch>
       )
@@ -431,15 +462,13 @@ class App extends Component {
       return(
         <Switch>
           <Route exact path="/" render={() =>
-            <Welcome handleLogin={this.navigateLogin} handleCreate={this.navigateCreate} />
+            <Welcome handleLogin={this.navigateLogin} handleCreate={this.navigateCreate}
+              handleInstructions={this.navigateInstructions} handleAbout={this.navigateAbout} />
           } />
           <Route path="/login" render={() => 
             <AccountLogin submitCredentials={this.login} createUrl="/account-create" />
           } />
-          <Route path="/account-create" render={({match, location, history}) => 
-            <AccountCreation submitCredentials={this.createAccountWithConfirm} 
-              loginUrl="/login" match={match} location={location} history={history} />
-            } />
+          {commonRoutes}
           <Redirect to="/" />
         </Switch>
       )
@@ -454,17 +483,28 @@ class App extends Component {
   }
 
   getNavLinks(){
+    const commonLinks = 
+      <React.Fragment>
+          <a href="/instructions" className="nav-link" 
+            onClick={this.handleInstructionsLink}>Instructions</a>
+          <a href="/about" className="nav-link" 
+            onClick={this.handleAboutLink}>About</a>
+      </React.Fragment>
     if(this.state.loginStatus === Shared.LoginStatus.LOGGEDIN){
       return(
         <React.Fragment>
           <a href="/main-menu" className="nav-link" onClick={this.handleMainLink}>Main Menu</a>
           <a href="/game" className="nav-link" onClick={this.handleGameLink}>Enter Game</a>
+          {commonLinks}
         </React.Fragment>
       )
     }
     else{
       return (
-        <a href="/" className="nav-link" onClick={this.handleHomeLink}>Home</a>
+        <React.Fragment>
+          <a href="/" className="nav-link" onClick={this.handleHomeLink}>Home</a>
+          {commonLinks}
+        </React.Fragment>
       )
     }
   }
