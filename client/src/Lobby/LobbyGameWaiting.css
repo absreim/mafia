@@ -8,3 +8,8 @@
 .lobby-game__chat-title {
     margin-bottom: 0px;
 }
+
+.lobby-game-players-list {
+    border: 1px solid;
+    color: darkblue;
+}

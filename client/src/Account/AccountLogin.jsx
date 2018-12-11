@@ -34,10 +34,12 @@ class AccountLogin extends Component{
             <form onSubmit={this.handleSubmit}>
                 <h3>Enter your credentials to log in</h3>
                 <label htmlFor="username">Username:</label>
-                <input type="text" id="username" value={this.state.username} onChange={this.handleUsernameChange} />
+                <input className="account-login__input" type="text" 
+                    id="username" value={this.state.username} onChange={this.handleUsernameChange} />
                 <label htmlFor="password">Password:</label>
-                <input type="password" id="password" value={this.state.password} onChange={this.handlePasswordChange} />
-                <input type="submit" value="Submit" 
+                <input className="account-login__input" type="password" 
+                    id="password" value={this.state.password} onChange={this.handlePasswordChange} />
+                <input className="account-login__input" type="submit" value="Submit" 
                     disabled={this.state.username.length === 0 || this.state.password.length === 0} />
                 <p>Don't have an account? <Link to={this.props.createUrl}>Create one</Link>.</p>
             </form>

@@ -84,12 +84,15 @@ class CreateGame extends Component{
                 <h3>Create a New Game</h3>
                 <p>All fields must be filled.</p>
                 <label htmlFor="name">Name</label>
-                <input id="name" type="text" value={this.state.name} onChange={this.handleNameChange} />
+                <input className="create-game__input" id="name" type="text" 
+                    value={this.state.name} onChange={this.handleNameChange} />
                 <label htmlFor="numPlayers">Number of Players (minimum 4)</label>
-                <input id="numPlayers" type="number" value={this.state.numPlayers} 
+                <input className="create-game__input" id="numPlayers" 
+                    type="number" value={this.state.numPlayers} 
                     onChange={this.handleNumPlayersChange} />
                 <label htmlFor="numWerewolves">Number of Werewolves{this.getWerewolfHelpText()}</label>
-                <input id="numWerewolves" type="number" value={this.state.numWerewolves} 
+                <input className="create-game__input" id="numWerewolves" 
+                    type="number" value={this.state.numWerewolves} 
                     onChange={this.handleNumWerewolvesChange} />
                 <div className="create-game__button-container">
                     <button type="button" onClick={this.handleLobby}>Return to Lobby</button>

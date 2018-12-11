@@ -12,6 +12,8 @@ sendSuggestion(player) - function to send suggestion to server
 
 import React, {Component} from "react"
 import "./InGameNighttime.css"
+import crescentWithStars from "./crescent-with-stars.svg"
+import "./images.css"
 
 class InGameNighttime extends Component{
     constructor(props){
@@ -115,7 +117,9 @@ class InGameNighttime extends Component{
             }
             return(
                 <div>
-                    <h3>It is the nighttime.</h3>
+                    <img className="crescent-with-stars" src={crescentWithStars}
+                        alt="Crescent moon and stars indicating it is night time." />
+                    <h3>It is the night time.</h3>
                     <p>In this phase, werewolves choose a villager to kill and vote on the killing.</p>
                     <p>{statusDescText}</p>
                     <table>
@@ -181,7 +185,9 @@ class InGameNighttime extends Component{
             }
             return (
                 <div>
-                    <h3>It is the nighttime.</h3>
+                    <img className="crescent-with-stars" src={crescentWithStars}
+                        alt="Crescent moon and stars indicating it is night time." />
+                    <h3>It is the night time.</h3>
                     <p>In this phase, werewolves choose a villager to kill.</p>
                     <p>{statusDescText}</p>
                     <table>

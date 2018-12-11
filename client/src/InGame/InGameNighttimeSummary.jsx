@@ -21,6 +21,8 @@ sendAck - function to send ack to server
 
 import React, {Component} from "react"
 import "./InGameNighttimeSummary.css"
+import crescentWithStars from "./crescent-with-stars.svg"
+import "./images.css"
 
 class InGameNighttimeSummary extends Component{
     constructor(props){
@@ -297,6 +299,8 @@ class InGameNighttimeSummary extends Component{
         }
         return (
             <div>
+                <img className="crescent-with-stars" src={crescentWithStars}
+                    alt="Crescent moon and stars indicating it is night time." />
                 <h3>Werewolves have finished voting on whether to kill a chosen villager.</h3>
                 {outcomeDesc}
                 {tablesArea}

@@ -5,18 +5,18 @@ Root component for Mafia app.
 import React, { Component } from 'react'
 import axios from "axios"
 import './App.css'
-import AccountCreation from "./AccountCreation"
-import AccountDelete from "./AccountDelete"
-import AccountLogin from "./AccountLogin"
-import AccountManage from "./AccountManage"
-import ChangePassword from "./ChangePassword"
+import AccountCreation from "./Account/AccountCreation"
+import AccountDelete from "./Account/AccountDelete"
+import AccountLogin from "./Account/AccountLogin"
+import AccountManage from "./Account/AccountManage"
+import ChangePassword from "./Account/ChangePassword"
 import MainMenu from "./MainMenu"
 import Welcome from "./Welcome"
 import AccountMenu from "./AccountMenu"
 import GameContent from "./GameContent"
 import Instructions from "./Instructions"
 import About from "./About"
-import Shared from "./Shared"
+import Shared from "./Common/Shared"
 import {Switch, Route, Redirect, withRouter} from "react-router-dom"
 
 class App extends Component {
@@ -25,7 +25,8 @@ class App extends Component {
     this.state = {
       username: null,
       loginStatus: null,
-      userMessage: "" // important message visible to user
+      userMessage: "", // important message visible to user
+      dropMenuVisible: false
     }
     axios.defaults.withCredentials = true
     this.createAccountWithConfirm = this.createAccountWithConfirm.bind(this)
@@ -48,6 +49,8 @@ class App extends Component {
     this.handleMainLink = this.handleMainLink.bind(this)
     this.handleInstructionsLink = this.handleInstructionsLink.bind(this)
     this.handleAboutLink = this.handleAboutLink.bind(this)
+    this.hideDropdownMenu = this.hideDropdownMenu.bind(this)
+    this.toggleDropdownMenu = this.toggleDropdownMenu.bind(this)
   }
   componentDidMount(){
     this.updateLoginStatus()
@@ -415,16 +418,20 @@ class App extends Component {
     this.props.history.push("/about")
   }
 
+  // account dropdown menu functions
+
+  hideDropdownMenu(){
+    this.setState({dropMenuVisible: false})
+  }
+  toggleDropdownMenu(){
+    this.setState((prevState) => {
+      return {
+        dropMenuVisible: !prevState.dropMenuVisible
+      }
+    })
+  }
+
   getMainContent(){
-    const commonRoutes = 
-      <React.Fragment>
-        <Route path="/account-create" render={({match, location, history}) => 
-            <AccountCreation submitCredentials={this.createAccountWithConfirm} 
-              loginUrl="/login" match={match} location={location} history={history} />
-          } />
-        <Route path="/instructions" component={Instructions} />
-        <Route path="/about" component={About} />
-      </React.Fragment>
     if(this.state.loginStatus === null){
       return (
         <React.Fragment>
@@ -453,7 +460,12 @@ class App extends Component {
           <Route path="/change-password" render={() => 
             <ChangePassword submitPasswords={this.changePassword} username={this.state.username} />
           } />
-          {commonRoutes}
+          <Route path="/account-create" render={({match, location, history}) => 
+            <AccountCreation submitCredentials={this.createAccountWithConfirm} 
+              loginUrl="/login" match={match} location={location} history={history} />
+          } />
+          <Route path="/instructions" component={Instructions} />
+          <Route path="/about" component={About} />
           <Redirect to="/main-menu" />
         </Switch>
       )
@@ -468,7 +480,12 @@ class App extends Component {
           <Route path="/login" render={() => 
             <AccountLogin submitCredentials={this.login} createUrl="/account-create" />
           } />
-          {commonRoutes}
+          <Route path="/account-create" render={({match, location, history}) => 
+            <AccountCreation submitCredentials={this.createAccountWithConfirm} 
+              loginUrl="/login" match={match} location={location} history={history} />
+          } />
+          <Route path="/instructions" component={Instructions} />
+          <Route path="/about" component={About} />
           <Redirect to="/" />
         </Switch>
       )
@@ -515,7 +532,7 @@ class App extends Component {
       dismissButtonClass += " dismiss-button--hidden"
     }
     return (
-      <React.Fragment>
+      <div onClick={this.hideDropdownMenu}>
         <header>
             <h2 className="main-title">Absreim's Mafia</h2>
         </header>
@@ -524,7 +541,8 @@ class App extends Component {
             <div>
               <AccountMenu username={this.state.username} loginStatus={this.state.loginStatus} 
                 handleLogin={this.navigateLogin} handleLogout={this.logout} 
-                handleManage={this.navigateManage} handleCreate={this.navigateCreate} />
+                handleManage={this.navigateManage} handleCreate={this.navigateCreate}
+                menuVisible={this.state.dropMenuVisible} toggleMenu={this.toggleDropdownMenu} />
             </div>
             <div className="nav-links-container">{this.getNavLinks()}</div>
           </div>
@@ -534,7 +552,7 @@ class App extends Component {
           <p className={"main-component__user-message-paragraph"}>{this.state.userMessage}</p>
           <button onClick={this.clearMessage} className={dismissButtonClass}>Dismiss</button>
         </footer>
-      </React.Fragment>
+      </div>
     )
   }
 }

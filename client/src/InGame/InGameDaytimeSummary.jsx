@@ -24,6 +24,8 @@ sendAck - function to send ack to server
 
 import React, {Component} from "react"
 import "./InGameDaytimeSummary.css"
+import sunWithClouds from "./sun-with-clouds.svg"
+import "./images.css"
 
 class InGameDaytimeSummary extends Component{
     constructor(props){
@@ -172,6 +174,8 @@ class InGameDaytimeSummary extends Component{
         }
         return(
             <div>
+                <img className="sun-with-clouds" src={sunWithClouds}
+                    alt="Sun, a blue sky, and clouds indicating daytime." />
                 <h3>Daytime voting has ended.</h3>
                 {outcomeDesc}
                 {votesTable}

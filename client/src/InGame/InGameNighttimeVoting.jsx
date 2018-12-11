@@ -14,6 +14,8 @@ sendVote(vote) - function to send vote to server
 
 import React, {Component} from "react"
 import "./InGameNighttimeVoting.css"
+import crescentWithStars from "./crescent-with-stars.svg"
+import "./images.css"
 
 class InGameNighttimeVoting extends Component{
     constructor(props){
@@ -115,6 +117,8 @@ class InGameNighttimeVoting extends Component{
             })
             return (
                 <div>
+                    <img className="crescent-with-stars" src={crescentWithStars}
+                        alt="Crescent moon and stars indicating it is night time." />
                     <h3>It is time to vote on whether to kill the chosen villager.</h3>
                     <p>The chosen villager is&nbsp;
                         <span className=".chosen-player-desc__player-name">{this.props.chosenPlayer}</span>.</p>
@@ -168,6 +172,8 @@ class InGameNighttimeVoting extends Component{
             }
             return(
                 <div>
+                    <img className="crescent-with-stars" src={crescentWithStars}
+                        alt="Crescent moon and stars indicating it is night time." />
                     <h3>Werewolves are currently voting on whether to kill a selected villager.</h3>
                     <p>{statusDescText}</p>
                     <table>

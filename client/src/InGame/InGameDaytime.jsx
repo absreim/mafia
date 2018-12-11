@@ -12,6 +12,8 @@ sendSuggestion(player) - function to send suggestion to server
 
 import React, {Component} from "react"
 import "./InGameDaytime.css"
+import sunWithClouds from "./sun-with-clouds.svg"
+import "./images.css"
 
 class InGameDaytime extends Component{
     constructor(props){
@@ -201,6 +203,8 @@ class InGameDaytime extends Component{
         }
         return (
             <div>
+                <img className="sun-with-clouds" src={sunWithClouds}
+                    alt="Sun, a blue sky, and clouds indicating daytime." />
                 <h3>It is the daytime.</h3>
                 <p>You are a {playerTypeText} and you are {playerAliveText}.</p>
                 <p>In this phase, someone must suggest a living player to execute. 

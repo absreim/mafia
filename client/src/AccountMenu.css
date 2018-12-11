@@ -18,6 +18,7 @@
     border-top: 1px solid;
     border-bottom: 1px solid;
     background-color: white;
+    color: darkblue;
     cursor: pointer;
     font-size: large;
     width: 100%;
@@ -25,6 +26,10 @@
 
 .dropdown__button:hover {
     background-color: lightgrey;
+}
+
+.dropdown__button:active {
+    background-color: grey;
 }
 
 .icon-username-box {
@@ -49,6 +54,7 @@
 
 .account-menu__user-description {
     display: inline;
+    color: white;
 }
 
 .person-icon__circle {

@@ -33,10 +33,14 @@ class Welcome extends Component{
         return(
             <React.Fragment>
                 <h3>Welcome to Absreim's Mafia</h3>
-                <button onClick={this.handleLogin}>Log in</button>
-                <button onClick={this.handleCreate}>Create Account</button>
-                <button onClick={this.handleInstructions}>Instructions</button>
-                <button onClick={this.handleAbout}>About</button>
+                <button
+                    onClick={this.handleLogin}>Log in</button>
+                <button
+                    onClick={this.handleCreate}>Create Account</button>
+                <button
+                    onClick={this.handleInstructions}>Instructions</button>
+                <button
+                    onClick={this.handleAbout}>About</button>
             </React.Fragment>
         )
     }

@@ -11,7 +11,7 @@ received chat messages
 */
 
 import React, {Component} from "react"
-import Chat from "./Chat"
+import Chat from "../Common/Chat"
 import "./LobbyGameWaiting.css"
 
 class LobbyGameWaiting extends Component {
@@ -35,11 +35,15 @@ class LobbyGameWaiting extends Component {
             <div className="lobby-game__root-container">
                 <div>
                     <h3>In Game: {this.props.gameName}</h3>
-                    <p>Waiting for players. Game will start automatically when needed number of players is reached.</p>
-                    <p>Needed number of players: {this.props.gameState.maxPlayers}</p>
-                    <p>Number of werewolves: {this.props.gameState.numWerewolves}</p>
-                    <p>Number of players currently joined: {this.props.gameState.players.length}</p>
-                    <table>
+                    <p>Waiting for players. Game will start automatically 
+                        when needed number of players is reached.</p>
+                    <p>Needed number of players:&nbsp; 
+                        <strong>{this.props.gameState.maxPlayers}</strong></p>
+                    <p>Number of werewolves:&nbsp;
+                        <strong>{this.props.gameState.numWerewolves}</strong></p>
+                    <p>Number of players currently joined:&nbsp;
+                        <strong>{this.props.gameState.players.length}</strong></p>
+                    <table className="lobby-game-players-list">
                         <thead>
                             <tr>
                                 <th>Players in Game</th>

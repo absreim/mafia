@@ -14,6 +14,8 @@ sendVote(vote) - function to send vote to server
 
 import React, {Component} from "react"
 import "./InGameDaytimeVoting.css"
+import sunWithClouds from "./sun-with-clouds.svg"
+import "./images.css"
 
 class InGameDaytimeVoting extends Component{
     constructor(props){
@@ -90,6 +92,8 @@ class InGameDaytimeVoting extends Component{
             const interactionArea = playerIsAlive ? livingInteractionArea : deadInteractionArea
             return(
                 <div>
+                    <img className="sun-with-clouds" src={sunWithClouds}
+                        alt="Sun, a blue sky, and clouds indicating daytime." />
                     <h3>It is time to vote in the daytime to execute a suspected werewolf.</h3>
                     <p>The chosen player is&nbsp;
                         <span className=".chosen-player-desc__player-name">{this.props.chosenPlayer}</span>.</p>
@@ -145,6 +149,8 @@ class InGameDaytimeVoting extends Component{
             const interactionArea = playerIsAlive ? livingInteractionArea : deadInteractionArea
             return(
                 <div>
+                    <img className="sun-with-clouds" src={sunWithClouds}
+                        alt="Sun, a blue sky, and clouds indicating daytime." />
                     <h3>It is time to vote in the daytime to execute a suspected werewolf.</h3>
                     <p>The chosen player is&nbsp;
                         <span className=".chosen-player-desc__player-name">{this.props.chosenPlayer}</span>.</p>

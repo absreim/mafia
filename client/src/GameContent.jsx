@@ -2,11 +2,11 @@
 
 import React, {Component} from "react"
 import io from "socket.io-client"
-import Shared from "./Shared"
-import Lobby from "./Lobby"
-import CreateGame from "./CreateGame"
-import LobbyGameWaiting from "./LobbyGameWaiting"
-import InGame from "./InGame"
+import Shared from "./Common/Shared"
+import Lobby from "./Lobby/Lobby"
+import CreateGame from "./Lobby/CreateGame"
+import LobbyGameWaiting from "./Lobby/LobbyGameWaiting"
+import InGame from "./InGame/InGame"
 
 const GameContentPhase = {
     INITIAL: "initial",

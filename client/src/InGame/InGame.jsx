@@ -16,7 +16,7 @@ previously received werewolf-only chat messages
 */
 
 import React, {Component} from "react"
-import Shared from "./Shared"
+import Shared from "../Common/Shared"
 import InGameStarted from "./InGameStarted"
 import InGameDaytime from "./InGameDaytime"
 import InGameDaytimeVoting from "./InGameDaytimeVoting"
@@ -25,7 +25,7 @@ import InGameNighttime from "./InGameNighttime"
 import InGameNighttimeVoting from "./InGameNighttimeVoting"
 import InGameNighttimeSummary from "./InGameNighttimeSummary"
 import InGameOver from "./InGameOver"
-import Chat from "./Chat"
+import Chat from "../Common/Chat"
 import "./InGame.css"
 
 class InGame extends Component{

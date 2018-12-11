@@ -9,7 +9,6 @@ Required props:
 */
 
 import React, {Component} from "react"
-import "./MainMenu.css"
 
 class MainMenu extends Component{
     constructor(props){
@@ -39,11 +38,16 @@ class MainMenu extends Component{
         return(
             <React.Fragment>
                 <h3>Main Menu</h3>
-                <button onClick={this.handleEnterGame}>Enter Game</button>
-                <button onClick={this.handleManage}>Manage Account</button>
-                <button onClick={this.handleLogout}>Log Out</button>
-                <button onClick={this.handleInstructions}>Instructions</button>
-                <button onClick={this.handleAbout}>About</button>
+                <button
+                    onClick={this.handleEnterGame}>Enter Game</button>
+                <button
+                    onClick={this.handleManage}>Manage Account</button>
+                <button
+                    onClick={this.handleLogout}>Log Out</button>
+                <button
+                    onClick={this.handleInstructions}>Instructions</button>
+                <button
+                    onClick={this.handleAbout}>About</button>
             </React.Fragment>
         )
     }

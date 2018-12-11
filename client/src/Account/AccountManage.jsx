@@ -10,7 +10,6 @@ delete account interface
 */
 
 import React, {Component} from "react"
-import "./AccountManage.css"
 
 class AccountManage extends Component{
     constructor(props){
@@ -28,7 +27,7 @@ class AccountManage extends Component{
         return(
             <div>
                 <h3>Manage your account</h3>
-                <p>You are logged in as <span className="external-info">{this.props.username}</span></p>
+                <p>You are logged in as <strong>{this.props.username}</strong></p>
                 <button type="button" onClick={this.handleChangePassword}>Change Password</button>
                 <button type="button" onClick={this.handleDelete}>Delete Account</button>
             </div>

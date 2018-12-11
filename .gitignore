@@ -28,4 +28,4 @@
 
 # app logs
 
-combined.log
+**/combined.log

@@ -10,6 +10,37 @@ h2 {
   color: rgba(255, 255, 255, 0.9);
 }
 
+h3 {
+  color: darkblue;
+}
+
+h4 {
+  color: darkblue;
+}
+
+h5 {
+  color: darkblue;
+}
+
+p {
+  color: darkblue;
+}
+
+button, input[type=submit] {
+  display: block;
+  cursor: pointer;
+  color: white;
+  background-color: darkblue;
+  text-align: center;
+  border-radius: 5%;
+}
+button:hover , input[type=submit]:hover {
+  background-color: blue;
+}
+button:active, input[type=submit]:active {
+  background-color: blue;
+}
+
 .main-title {
   margin: 0;
   padding-top: 1em;

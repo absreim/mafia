@@ -6,7 +6,6 @@ Required props:
 */
 
 import React, {Component} from "react"
-import "./AccountDelete.css"
 
 class AccountDelete extends Component{
     constructor(props){
@@ -27,7 +26,7 @@ class AccountDelete extends Component{
             <form onSubmit={this.handleSubmit}>
                 <h3>Confirm account deletion</h3>
                 <p>Enter your password one last to time to delete your account&nbsp;
-                    <span className="external-info">{this.props.username}</span></p>
+                    <strong>{this.props.username}</strong></p>
                 <label htmlFor="password">Password:</label>
                 <input type="password" id="password" value={this.state.password}
                     onChange={this.handlePasswordChange} />

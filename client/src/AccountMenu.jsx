@@ -3,22 +3,23 @@ Drop down menu that provides links to account management functions
 with icon indicating login status.
 Required props:
 - username - name of logged in user, or null if not logged in
+- menuVisible - boolean variable that stores whether the menu is visible
 - loginStatus - Shared.LoginState.LOGGEDIN if logged in, otherwise
 not logged in
 - handleLogin - handler function for when user clicks the Log In link
 - handleLogout - handler function for when the user clicks the Log Out link
 - handleManage - handler function for when the user clicks the Manage
 - handleCreate - handler function for when the user clicks the Create Account link
+- toggleMenu - function to toggle the state the visibility of the menu
 */
 
 import React, {Component} from "react"
 import "./AccountMenu.css"
-import Shared from "./Shared.js"
+import Shared from "./Common/Shared.js"
 
 class AccountMenu extends Component{
     constructor(props){
         super(props)
-        this.state = {menuVisible: false}
         this.handleLogin = this.handleLogin.bind(this)
         this.handleLogout = this.handleLogout.bind(this)
         this.handleManage = this.handleManage.bind(this)
@@ -26,30 +27,25 @@ class AccountMenu extends Component{
         this.toggleMenu = this.toggleMenu.bind(this)
     }
     handleLogin(){
-        this.setState({menuVisible: false})
         this.props.handleLogin()
     }
     handleLogout(){
-        this.setState({menuVisible: false})
         this.props.handleLogout()
     }
     handleManage(){
-        this.setState({menuVisible: false})
         this.props.handleManage()
     }
     handleCreate(){
-        this.setState({menuVisible: false})
         this.props.handleCreate()
     }
-    toggleMenu(){
-        this.setState((prevState) => ({
-            menuVisible: !prevState.menuVisible
-        }))
+    toggleMenu(event){
+        event.stopPropagation()
+        this.props.toggleMenu()
     }
     render(){
         let dropdownClass = "dropdown"
         let arrowImgTransform = null
-        if(this.state.menuVisible){
+        if(this.props.menuVisible){
             dropdownClass += " dropdown__expanded"
             arrowImgTransform = "matrix(0,1,-1.6744885,0,494.64091,288.3161)"
         }

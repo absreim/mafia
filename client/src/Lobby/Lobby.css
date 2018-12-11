@@ -1,0 +1,39 @@
+.lobby__button-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.lobby-table {
+    border: 1px solid;
+    border-collapse: collapse;
+    color: darkblue;
+}
+
+table.lobby-table td,table.lobby-table th {
+    border-right: 1px solid;
+    border-left: 1px solid;
+}
+
+table.lobby-table tr {
+    border-top: 1px solid;
+}
+
+.lobby-games-table__row {
+    color: darkblue;
+    background-color: white;
+    cursor: pointer;
+}
+
+.lobby-games-table__row:hover {
+    background-color: lightgray;
+}
+
+.lobby-games-table__row--selected {
+    color: white;
+    background-color: darkblue;
+    cursor: pointer;
+}
+
+.lobby-games-table__row--selected:hover {
+    background-color: blue;
+}
