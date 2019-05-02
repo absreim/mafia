@@ -7,6 +7,7 @@ const pgPromise = require("pg-promise")()
 const sharedSession = require("express-socket.io-session")
 const socketIo = require("socket.io")
 const winston = require("winston")
+const cors = require("cors")
 
 const Shared = require("./shared.js")
 const settings = require("./settings.json")
@@ -38,6 +39,14 @@ if (!isProduction) {
         format: combinedFormat
     }))
 }
+
+const corsOptions = {
+    origin: "chrome-extension://ighgfhafmiooifhjimpipmmhhgpekbjn",
+    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"]
+}
+
+app.use(cors(corsOptions))
 
 let sessionSecret = settings.dev_secret
 if(process.env.SECRET){
